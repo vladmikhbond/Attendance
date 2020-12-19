@@ -2,20 +2,24 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
-    var students = Model.Staff.GroupBy(s => s.GroupName);
+    //var students = Model.CheckedStaff.GroupBy(s => s.Group);
 }
 
-<div class="text-center">
+<div class="text-left">
 
-    <form asp-page="Index" method="post" enctype="multipart/form-data">
-        <input asp-for="UploadedFile" />
-        <input type="hidden" id="when" name="when" />
+    <form id="form1" asp-page="Index" method="post" enctype="multipart/form-data">
+        <input asp-for="UploadedFile" accept="text/html"/>
     </form>
-    <p></p>
-    <h3>@Model.When</h3>
-    <h4>Presents (@Model.Staff.Count(x => x.IsPresent) из @Model.Staff.Count() )</h4>
+
+@if (Model.CheckedStaff != null && Model.CheckedStaff.Length > 0) {
+    <hr/>
+    <form asp-page="Index" asp-page-handler="Save" method="post">
+        <input asp-for="MeetComment" />
+        <input type="submit" value="Save" />
+    </form>
+
     <table>
-        @foreach (var group in students)
+        @foreach (var group in Model.CheckedStaff.GroupBy(s => s.Group))
         {
             <tr>
                 <td style="font-weight:800">@group.Key (@group.Count(x => x.IsPresent) из @group.Count() )</td>
@@ -29,16 +33,14 @@
             }
         }
     </table>
-
+}
 </div>
+
 @section Scripts {
    <script>
-       let uploadedFile = document.getElementById("UploadedFile");
-       let when = document.getElementById("when");
-       let form = document.querySelector("form");
-       uploadedFile.addEventListener('change', function (e) {
-           when.value = this.files[0].lastModifiedDate;
-           form.submit();
+       // 
+       document.querySelector("#UploadedFile").addEventListener('change', function (e) {
+           document.querySelector("#form1").submit();
        });
 
    </script>

@@ -115,7 +115,7 @@
 Дмитро	Карплюк	Олегович	dmytro.karpliuk@nure.ua	ПЗПІ-17-5
 Руслан	Кодрул	Едуардович	ruslan.kodrul@nure.ua	ПЗПІ-17-5
 Юлія	Корабельська	Костянтинівна	yuliia.fedosenko@nure.ua	ПЗПІ-17-5
-Ельдар	Мамішев	Іса Огли	eldar.mamishev@nure.ua	ПЗПІ-17-5
+Ельдар	Мамішев	Іса_Огли	eldar.mamishev@nure.ua	ПЗПІ-17-5
 Данило	Овчаренко	Євгенович	danylo.ovcharenko@nure.ua	ПЗПІ-17-5
 Катерина	Саламатіна	Владиславівна	kateryna.salamatina@nure.ua	ПЗПІ-17-5
 Денис	Хоровець	Геннадійович	denys.khorovets@nure.ua	ПЗПІ-17-5
@@ -298,7 +298,7 @@
 Олександра	Бондаренко	Олександрівна	oleksandra.bondarenko@nure.ua	ПЗПІ-18-4(анг)
 Ілля	Бронов	Вікторович	illia.bronov@nure.ua	ПЗПІ-18-4(анг)
 Едуард	Воронкін	Сергійович	eduard.voronkin@nure.ua	ПЗПІ-18-4(анг)
-Тамара	Гамбарова		tamara.hambarova@nure.ua	ПЗПІ-18-4(анг)
+Тамара	Гамбарова   xxx tamara.hambarova@nure.ua	ПЗПІ-18-4(анг)
 Дмитро	Глушенков	Михайлович	dmytro.hlushenkov@nure.ua	ПЗПІ-18-4(анг)
 Іван	Грицай	Федорович	ivan.hrytsai@nure.ua	ПЗПІ-18-4(анг)
 Юлія	Желякова	Андріївна	yuliia.zheliakova@nure.ua	ПЗПІ-18-4(анг)
@@ -312,7 +312,7 @@
 Ярослав	Ніжанковський	Сергійович	yaroslav.nizhankovskyi@nure.ua	ПЗПІ-18-4(анг)
 Ілля	Новосельцев	Ігорович	illia.novoseltsev@nure.ua	ПЗПІ-18-4(анг)
 Єгор	Питомець	Максимович	yehor.pytomets@nure.ua	ПЗПІ-18-4(анг)
-Денис	Семко		denys.semko@nure.ua	ПЗПІ-18-4(анг)
+Денис	Семко   xxx denys.semko@nure.ua	ПЗПІ-18-4(анг)
 Тарас	Юрченко	Андрійович	taras.iurchenko@nure.ua	ПЗПІ-18-4(анг)
 Наталія	Янковська	Сергіївна	nataliia.iankovska@nure.ua	ПЗПІ-18-4(анг)
 Михайло	Білий	Дмитрович	mykhailo.bilyi@nure.ua	ПЗПІ-18-5(анг)
@@ -777,7 +777,7 @@
 Дар`Я	Стрюкова	В`Ячеславівна	daria.striukova@nure.ua	ПЗПІ-20-4(анг)
 Іван	Хардіков	Вадимович	ivan.khardikov@nure.ua	ПЗПІ-20-4(анг)
 Поліна	Харченко	Дмитрівна	polina.kharchenko@nure.ua	ПЗПІ-20-4(анг)
-Гонзага	Щедривий	І Сілва Філіп	honzaha.shchedryvyi@nure.ua	ПЗПІ-20-4(анг)
+Гонзага	Щедривий	І_Сілва_Філіп	honzaha.shchedryvyi@nure.ua	ПЗПІ-20-4(анг)
 Марія	Бердник	Ігорівна	mariia.berdnyk@nure.ua	ПЗПІ-20-5(анг)
 Данило	Бєліков	Юрійович	danylo.bielikov@nure.ua	ПЗПІ-20-5(анг)
 Демид	Внуков	Сергійович	demyd.vnukov@nure.ua	ПЗПІ-20-5(анг)

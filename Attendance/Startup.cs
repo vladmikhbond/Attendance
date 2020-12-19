@@ -67,9 +67,10 @@ namespace Attendance
             {
                 endpoints.MapRazorPages();
             });
+            
             // load database
-            string path = Path.Combine(env.WebRootPath, "data.txt");
-            Process.LoadData(path);
+            // string path = Path.Combine(env.WebRootPath, "data.txt");
+            // Process.LoadData(path);
         }
     }
 }

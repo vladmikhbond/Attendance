@@ -1,0 +1,12 @@
+﻿@page
+@model Attendance.Pages.NewStudentsModel
+@{
+}
+<h2>New</h2>
+<form asp-page="NewStudents">
+    <textarea asp-for="StudentList" cols="80"></textarea>
+    <div>
+        <span asp-validation-for="StudentList" style="white-space: pre"></span>
+    </div>
+    <button >Add</button>
+</form>

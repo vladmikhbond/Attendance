@@ -11,20 +11,6 @@ namespace Attendance.Models
 {
     public class Process
     {
-        public static Student[] Students { set; get; }
-
-        public static void LoadData(string filePath)
-        {
-            string[] lines = File.ReadAllLines(filePath);
-
-            Students = lines.Select(l =>
-            {
-                var a = l.Split('\t');
-                var groupName = new string(a[4].TakeWhile(c => c != '(').ToArray());
-                return new Student { Name = a[0], Surname = a[1],  GroupName = groupName};
-            }).ToArray();
-        }
-
         string[] GetPresentNames(IFormFile uploadedFile)
         {
             //
@@ -38,40 +24,41 @@ namespace Attendance.Models
             //
             string sample = "<span class=\"ZjFb7c\">(.*?)<\\/span>";
             Regex regex = new Regex(sample, RegexOptions.Multiline);
-            
+
             return regex.Matches(text)
                 .Select(m => m.Groups[1].Value)
                 .Distinct()
                 .ToArray();
         }
 
-        public Student[] DoCheck(IFormFile uploadedFile)
+        public Student[] DoCheck(IFormFile uploadedFile, Student[] Students)
         {
             var names = GetPresentNames(uploadedFile);
 
             var presentStudents = Students
-                .Where(s => names.Contains($"{s.Name} {s.Surname}"))                
+                .Where(s => names.Contains($"{s.Name} {s.Surname}"))
                 .ToArray();
 
             var presentGroups = presentStudents
-                .Select(s => s.GroupName)
+                .Select(s => s.Group)
                 .Distinct().ToArray();
 
             var allStudents = Students
-                .Where(s => presentGroups.Contains(s.GroupName))
+                .Where(s => presentGroups.Contains(s.Group))
                 .Select(s => new Student
                 {
                     Surname = s.Surname,
                     Name = s.Name,
-                    GroupName = s.GroupName,
-                    IsPresent = presentStudents.Contains(s)
+                    Group = s.Group,
+                    IsPresent = presentStudents.Contains(s),
+                    Id = s.Id
                 })
-                .OrderBy(s => s.GroupName)
+                .OrderBy(s => s.Group)
                 .ThenBy(s => s.Surname)
                 .ThenBy(s => s.Name)
-                .ToArray();                
+                .ToArray();
 
-            return allStudents;            
+            return allStudents;
         }
 
     }
