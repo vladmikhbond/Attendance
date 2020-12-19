@@ -37,7 +37,7 @@ namespace Attendance
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
 
-            services.AddScoped<Process>();
+            services.AddScoped(_ => new Process("<span class=\"ZjFb7c\">(.*?)<\\/span>"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

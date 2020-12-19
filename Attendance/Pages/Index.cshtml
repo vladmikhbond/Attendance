@@ -2,7 +2,6 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
-    //var students = Model.CheckedStaff.GroupBy(s => s.Group);
 }
 
 <div class="text-left">
@@ -10,12 +9,12 @@
     <form id="form1" asp-page="Index" method="post" enctype="multipart/form-data">
         <input asp-for="UploadedFile" accept="text/html"/>
     </form>
-
-@if (Model.CheckedStaff != null && Model.CheckedStaff.Length > 0) {
     <hr/>
+@if (Model.CheckedStaff != null && Model.CheckedStaff.Length > 0) {
+
     <form asp-page="Index" asp-page-handler="Save" method="post">
-        <input asp-for="MeetComment" />
-        <input type="submit" value="Save" />
+        <input asp-for="MeetComment" placeholder="your comment"/>
+        <input type="submit" value="Save" title="Сохранить в базе данных"/>
     </form>
 
     <table>
@@ -33,6 +32,16 @@
             }
         }
     </table>
+} 
+else
+{
+<pre>
+На странице встречи надо выбрать вкладку "Участники".
+
+Встречу надо сохранить как "Вся страница полностью".
+
+Сохраненный файл .html следует загрузить перетаскиванием или кнопкой "Выбрать файл".
+</pre>
 }
 </div>
 

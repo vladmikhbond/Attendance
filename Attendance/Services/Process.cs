@@ -1,16 +1,20 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Attendance.Models
 {
     public class Process
     {
+        private readonly string _pattern;
+
+        public Process(string pattern)
+        {
+            _pattern = pattern;
+        }
+
         string[] GetPresentNames(IFormFile uploadedFile)
         {
             //
@@ -21,9 +25,9 @@ namespace Attendance.Models
             }
             string text = System.Text.Encoding.UTF8.GetString(buffer);
 
-            //
-            string sample = "<span class=\"ZjFb7c\">(.*?)<\\/span>";
-            Regex regex = new Regex(sample, RegexOptions.Multiline);
+            
+            //string sample = "<span class=\"ZjFb7c\">(.*?)<\\/span>";
+            Regex regex = new Regex(_pattern, RegexOptions.Multiline);
 
             return regex.Matches(text)
                 .Select(m => m.Groups[1].Value)
