@@ -37,7 +37,8 @@ namespace Attendance
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
 
-            services.AddScoped(_ => new Process("<span class=\"ZjFb7c\">(.*?)<\\/span>"));
+            //  "<span class=\"ZjFb7c\">(.*?)<\\/span>"
+            services.AddScoped(_ => new Process(Configuration["pattern"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,6 +67,7 @@ namespace Attendance
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+                endpoints.MapControllers();
             });
             
             // load database

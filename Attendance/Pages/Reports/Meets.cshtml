@@ -1,0 +1,48 @@
+﻿@page
+@model Attendance.Pages.Reports.MeetsModel
+@{
+}
+<h1>Meets</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            @foreach (var meet in Model.Meets)
+            {
+                <div>
+                    <button class="btn btn-link" onclick="fetchReport(@meet.Id)" title="@meet.When.ToShortDateString()">
+                        @meet.When.ToShortDateString() - @meet.Comment
+                    </button>
+                </div>
+            }
+        </div>
+        <div class="col-8">
+            2 из 2
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    function fetchReport(meetId) {
+
+        fetch('/api/Reports?meetId=' + meetId)
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                
+                console.log(data);
+            });
+    }
+</script>    
+}
+
+
+
+
+
+
+
+
+
