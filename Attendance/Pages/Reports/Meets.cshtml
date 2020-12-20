@@ -7,34 +7,55 @@
 <div class="container">
     <div class="row">
         <div class="col-4">
-            @foreach (var meet in Model.Meets)
-            {
-                <div>
-                    <button class="btn btn-link" onclick="fetchReport(@meet.Id)" title="@meet.When.ToShortDateString()">
-                        @meet.When.ToShortDateString() - @meet.Comment
-                    </button>
-                </div>
-            }
+            <form asp-page="Reports/Meets" metod="post">
+                @foreach (var meet in Model.Meets)
+                {
+                    <div>
+                        <button class="btn btn-link" asp-route-id="@meet.Id">
+                            @meet.When.ToShortDateString() - @meet.Comment
+                        </button>
+                    </div>
+                }
+            </form>
         </div>
         <div class="col-8">
-            2 из 2
+            @if (Model.CheckedStaff != null && Model.CheckedStaff.Length > 0)
+            {
+                <table>
+                    @foreach (var group in Model.CheckedStaff.GroupBy(s => s.Group))
+                    {
+                        <tr>
+                            <td style="font-weight:800">@group.Key (@group.Count(x => x.IsPresent) из @group.Count() )</td>
+                        </tr>
+                        @foreach (var stud in group)
+                        {
+                            var color = stud.IsPresent ? "black" : "red";
+                            <tr>
+                                <td style="text-align:left; color:@color">@stud.Surname @stud.Name</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            }
         </div>
     </div>
 </div>
 
 @section Scripts {
 <script>
-    function fetchReport(meetId) {
+    
 
-        fetch('/api/Reports?meetId=' + meetId)
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
+    //function fetchReport(meetId) {
+
+    //    fetch('/api/Reports?meetId=' + meetId)
+    //        .then((response) => {
+    //            return response.json();
+    //        })
+    //        .then((data) => {
                 
-                console.log(data);
-            });
-    }
+    //            console.log(data);
+    //        });
+    //}
 </script>    
 }
 

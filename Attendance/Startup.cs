@@ -67,12 +67,7 @@ namespace Attendance
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
-                endpoints.MapControllers();
             });
-            
-            // load database
-            // string path = Path.Combine(env.WebRootPath, "data.txt");
-            // Process.LoadData(path);
         }
     }
 }

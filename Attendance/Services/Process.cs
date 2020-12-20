@@ -25,8 +25,6 @@ namespace Attendance.Models
             }
             string text = System.Text.Encoding.UTF8.GetString(buffer);
 
-            
-            //string sample = "<span class=\"ZjFb7c\">(.*?)<\\/span>";
             Regex regex = new Regex(_pattern, RegexOptions.Multiline);
 
             return regex.Matches(text)
@@ -35,19 +33,23 @@ namespace Attendance.Models
                 .ToArray();
         }
 
-        public Student[] DoCheck(IFormFile uploadedFile, Student[] Students)
+        public Student[] DoCheck(IFormFile uploadedFile, Student[] students)
         {
-            var names = GetPresentNames(uploadedFile);
+            string[] studentNames = GetPresentNames(uploadedFile);
+            return DoCheck(studentNames, students);
+         }
 
-            var presentStudents = Students
-                .Where(s => names.Contains($"{s.Name} {s.Surname}"))
-                .ToArray();
+        public Student[] DoCheck(string[] studentNames, Student[] students)
+        {
+            var presentStudents = students
+                 .Where(s => studentNames.Contains($"{s.Name} {s.Surname}"))
+                 .ToArray();
 
             var presentGroups = presentStudents
                 .Select(s => s.Group)
                 .Distinct().ToArray();
 
-            var allStudents = Students
+            var allStudents = students
                 .Where(s => presentGroups.Contains(s.Group))
                 .Select(s => new Student
                 {
@@ -63,6 +65,7 @@ namespace Attendance.Models
                 .ToArray();
 
             return allStudents;
+
         }
 
     }
