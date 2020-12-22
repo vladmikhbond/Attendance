@@ -42,7 +42,7 @@ namespace Attendance.Models
         public Student[] DoCheck(string[] studentNames, Student[] students)
         {
             var presentStudents = students
-                 .Where(s => studentNames.Contains($"{s.Name} {s.Surname}"))
+                 .Where(s => studentNames.Contains(s.NameSurname))
                  .ToArray();
 
             var presentGroups = presentStudents

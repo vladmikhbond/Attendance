@@ -29,7 +29,7 @@ namespace Attendance.Pages.Reports
         [BindNever]
         public Meet[] Meets { set; get; }
         [BindNever]
-        public Student[] CheckedStaff { set; get; }
+        public Student[] CheckedSudents { set; get; }
 
         public void OnGet()
         {
@@ -42,16 +42,22 @@ namespace Attendance.Pages.Reports
             Meets = _db.Meets.Where(m => m.UserName == User.Identity.Name)
                 .OrderBy(m => m.When).ToArray();
 
-            var allStudents = _db.Students.ToArray();
-
-            string[] presents = _db.MeetStudents
+            var checkeds = _db.MeetStudents
                 .Where(ms => ms.MeetId == id)
-                .Include(ms => ms.Student)     // using Microsoft.EntityFrameworkCore;
-                .Select(ms => $"{ms.Student.Name} {ms.Student.Surname}")
+                .Include(ms => ms.Student)     // using Microsoft.EntityFrameworkCore;                
+                .Select(ms => new { Student = ms.Student, isPresent = ms.IsPresent })
+
                 .ToArray();
 
-            CheckedStaff = _process.DoCheck(presents, allStudents);
+            foreach (var c in checkeds)
+            {
+                c.Student.IsPresent = c.isPresent;
+            }
 
+            CheckedSudents = checkeds.Select(c => c.Student)
+                .OrderBy(s => s.Group)
+                .ThenBy(s => s.Surname)
+                .ToArray();
         }
     }
 }

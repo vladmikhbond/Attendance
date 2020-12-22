@@ -27,7 +27,7 @@ namespace Attendance.Pages
         public string MeetComment { set; get; }
 
         [BindNever]
-        public Student[] CheckedStaff { set; get; }
+        public Student[] CheckedStudents { set; get; }
 
         public IndexModel(ApplicationDbContext db, Process process)
         {
@@ -39,15 +39,17 @@ namespace Attendance.Pages
         {         
         }
 
+        
         public void OnPost()
         {
-            CheckedStaff = _process.DoCheck(UploadedFile, _db.Students.ToArray());
-            TempData["presentIds"] = CheckedStaff.Where(s => s.IsPresent).Select(s => s.Id).ToArray() ;
+            CheckedStudents = _process.DoCheck(UploadedFile, _db.Students.ToArray());
+            // idx of an absent student is negative
+            TempData["checkedIds"] = CheckedStudents.Select(s => s.IsPresent ? s.Id : -s.Id).ToArray();
         }
 
         public IActionResult OnPostSave()
         {
-            var presentIds = (int[])TempData["presentIds"];
+            var checkedIds = (int[])TempData["checkedIds"];
             
             // new Meet to DB
             var newMeet = new Meet { 
@@ -59,8 +61,13 @@ namespace Attendance.Pages
 
             // new MeetStudents to DB
             var newMarks = _db.Students.
-                Where(s => presentIds.Contains(s.Id))
-                .Select(s => new MeetStudent { StudentId = s.Id, MeetId = newMeet.Id });
+                Where(s => checkedIds.Contains(s.Id) || checkedIds.Contains(-s.Id))
+                .Select(s => new MeetStudent { 
+                    StudentId = s.Id, 
+                    MeetId = newMeet.Id,
+                    IsPresent = checkedIds.Contains(s.Id)
+                });
+
             _db.MeetStudents.AddRange(newMarks);
             _db.SaveChanges();
 

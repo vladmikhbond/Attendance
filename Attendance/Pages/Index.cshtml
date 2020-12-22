@@ -10,7 +10,7 @@
         <input asp-for="UploadedFile" accept="text/html"/>
     </form>
     <hr/>
-@if (Model.CheckedStaff != null && Model.CheckedStaff.Length > 0) {
+@if (Model.CheckedStudents != null && Model.CheckedStudents.Length > 0) {
 
     <form asp-page="Index" asp-page-handler="Save" method="post">
         <input asp-for="MeetComment" placeholder="your comment"/>
@@ -18,7 +18,7 @@
     </form>
 
     <table>
-        @foreach (var group in Model.CheckedStaff.GroupBy(s => s.Group))
+        @foreach (var group in Model.CheckedStudents.GroupBy(s => s.Group))
         {
             <tr>
                 <td style="font-weight:800">@group.Key (@group.Count(x => x.IsPresent) из @group.Count() )</td>
@@ -37,9 +37,7 @@ else
 {
 <pre>
 На странице встречи надо выбрать вкладку "Участники".
-
 Встречу надо сохранить как "Вся страница полностью".
-
 Сохраненный файл .html следует загрузить перетаскиванием или кнопкой "Выбрать файл".
 </pre>
 }

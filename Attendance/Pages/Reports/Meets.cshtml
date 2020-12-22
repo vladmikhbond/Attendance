@@ -19,10 +19,10 @@
             </form>
         </div>
         <div class="col-8">
-            @if (Model.CheckedStaff != null && Model.CheckedStaff.Length > 0)
+            @if (Model.CheckedSudents != null && Model.CheckedSudents.Length > 0)
             {
                 <table>
-                    @foreach (var group in Model.CheckedStaff.GroupBy(s => s.Group))
+                    @foreach (var group in Model.CheckedSudents.GroupBy(s => s.Group))
                     {
                         <tr>
                             <td style="font-weight:800">@group.Key (@group.Count(x => x.IsPresent) из @group.Count() )</td>

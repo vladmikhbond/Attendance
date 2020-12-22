@@ -21,6 +21,9 @@ namespace Attendance.Models
 
         [NotMapped]
         public bool IsPresent { set; get; }
+        [NotMapped]
+        public string NameSurname { get => $"{Name} {Surname}"; }
+
     }
 
     public class StudentComparer : IEqualityComparer<Student>
