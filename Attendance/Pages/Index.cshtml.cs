@@ -22,7 +22,9 @@ namespace Attendance.Pages
         private readonly ApplicationDbContext _db;
         private readonly Process _process;
 
-        public IFormFile UploadedFile { set; get; }
+        public IFormFile UploadedFile { set; get; }      
+        [BindProperty]
+        public string GroupFilter { set; get; }
         [BindProperty]
         public string MeetComment { set; get; }
 
@@ -42,7 +44,8 @@ namespace Attendance.Pages
         
         public void OnPost()
         {
-            CheckedStudents = _process.DoCheck(UploadedFile, _db.Students.ToArray());
+            CheckedStudents = _process.DoCheck(UploadedFile, _db, GroupFilter);
+
             // idx of an absent student is negative
             TempData["checkedIds"] = CheckedStudents.Select(s => s.IsPresent ? s.Id : -s.Id).ToArray();
         }

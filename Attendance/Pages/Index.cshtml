@@ -5,9 +5,10 @@
 }
 
 <div class="text-left">
-
+    
     <form id="form1" asp-page="Index" method="post" enctype="multipart/form-data">
-        <input asp-for="UploadedFile" accept="text/html"/>
+        <input asp-for="GroupFilter" />
+        <input asp-for=" UploadedFile" accept="text/html" />
     </form>
     <hr/>
 @if (Model.CheckedStudents != null && Model.CheckedStudents.Length > 0) {

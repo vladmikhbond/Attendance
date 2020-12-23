@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Attendance.Data;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,39 +34,50 @@ namespace Attendance.Models
                 .ToArray();
         }
 
-        public Student[] DoCheck(IFormFile uploadedFile, Student[] students)
+        // Call when a user upploads html file
+        //
+        public Student[] DoCheck(IFormFile uploadedFile, ApplicationDbContext db, string groupFilter)
         {
-            string[] studentNames = GetPresentNames(uploadedFile);
-            return DoCheck(studentNames, students);
-         }
+            // select present students
+            string[] presentStudentNames = GetPresentNames(uploadedFile);
 
-        public Student[] DoCheck(string[] studentNames, Student[] students)
-        {
-            var presentStudents = students
-                 .Where(s => studentNames.Contains(s.NameSurname))
+            var presentStudents = db.Students
+                 .Where(s => presentStudentNames.Contains(s.Name + " " + s.Surname))
                  .ToArray();
 
-            var presentGroups = presentStudents
-                .Select(s => s.Group)
-                .Distinct().ToArray();
+            // select actual group names
+            string[] presentGroups;
+            if (string.IsNullOrWhiteSpace(groupFilter))
+            {
+                presentGroups = presentStudents
+                    .Select(s => s.Group)
+                    .Distinct().ToArray();
+            } 
+            else
+            {
+                Regex regex = new Regex(groupFilter);
+                var v = db.Students
+                    .Select(s => s.Group).Distinct()
+                    .ToArray();
+                presentGroups = v.Where(g => regex.IsMatch(g))
+                    .ToArray();                
+            }
 
-            var allStudents = students
+            // students from checked groups with isPresent prop
+            var checkedStudents = db.Students
                 .Where(s => presentGroups.Contains(s.Group))
-                .Select(s => new Student
-                {
-                    Surname = s.Surname,
-                    Name = s.Name,
-                    Group = s.Group,
-                    IsPresent = presentStudents.Contains(s),
-                    Id = s.Id
-                })
+                .ToArray();
+
+            for (int i = 0; i < checkedStudents.Length; i++)
+            {
+                checkedStudents[i].IsPresent = presentStudents.Contains(checkedStudents[i]);
+            }
+
+            return checkedStudents
                 .OrderBy(s => s.Group)
                 .ThenBy(s => s.Surname)
                 .ThenBy(s => s.Name)
                 .ToArray();
-
-            return allStudents;
-
         }
 
     }
