@@ -11,6 +11,8 @@ namespace Attendance.Models
         public string UserName { set; get; }
         public DateTime When { set; get; }
         public string Comment { set; get; }
+        //
+        public List<MeetStudent> MeetStudents { set; get; }
     }
 
 }

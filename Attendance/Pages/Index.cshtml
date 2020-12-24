@@ -7,8 +7,9 @@
 <div class="text-left">
     
     <form id="form1" asp-page="Index" method="post" enctype="multipart/form-data">
-        <input asp-for="GroupFilter" />
-        <input asp-for=" UploadedFile" accept="text/html" />
+        <p> <input asp-for="UploadedFile" accept="text/html" /> <span asp-validation-for="UploadedFile"></span></p> 
+        <p><input asp-for="GroupFilter" placeholder="your comment" /></p>
+        <p> <input type="submit" value="Uppload" title="Загрузить файл" /></p>
     </form>
     <hr/>
 @if (Model.CheckedStudents != null && Model.CheckedStudents.Length > 0) {
@@ -44,7 +45,7 @@ else
 }
 </div>
 
-@section Scripts {
+@*@section Scripts {
    <script>
        // 
        document.querySelector("#UploadedFile").addEventListener('change', function (e) {
@@ -52,4 +53,4 @@ else
        });
 
    </script>
-}
+}*@

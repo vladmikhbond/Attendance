@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Attendance.Data;
 using Attendance.Models;
@@ -26,38 +27,42 @@ namespace Attendance.Pages.Reports
             _process = process;
         }
 
+        [BindProperty]
+        public string GroupFilter { set; get; }
+
         [BindNever]
         public Meet[] Meets { set; get; }
         [BindNever]
-        public Student[] CheckedSudents { set; get; }
+        public Student[] Sudents { set; get; }
 
         public void OnGet()
         {
             Meets = _db.Meets.Where(m => m.UserName == User.Identity.Name)
-                .OrderBy(m => m.When).ToArray();
-        }
-
-        public void OnPost(int id)
-        {
-            Meets = _db.Meets.Where(m => m.UserName == User.Identity.Name)
-                .OrderBy(m => m.When).ToArray();
-
-            var checkeds = _db.MeetStudents
-                .Where(ms => ms.MeetId == id)
-                .Include(ms => ms.Student)     // using Microsoft.EntityFrameworkCore;                
-                .Select(ms => new { Student = ms.Student, isPresent = ms.IsPresent })
-
+                .Include(m => m.MeetStudents)
+                .OrderBy(m => m.When)
                 .ToArray();
 
-            foreach (var c in checkeds)
-            {
-                c.Student.IsPresent = c.isPresent;
-            }
+            var studIs = Meets
+                .SelectMany(m => m.MeetStudents)
+                .Select(ms => ms.StudentId)
+                .Distinct();
 
-            CheckedSudents = checkeds.Select(c => c.Student)
+            Sudents = _db.Students
+                .Where(s => studIs.Contains(s.Id))
                 .OrderBy(s => s.Group)
                 .ThenBy(s => s.Surname)
                 .ToArray();
+
+            if (!string.IsNullOrWhiteSpace(GroupFilter))
+            {
+                Regex regex = new(GroupFilter);
+                Sudents = Sudents.Where(s => regex.IsMatch(s.Group)).ToArray();
+            }     
+        }
+
+        public void OnPost()
+        {
+            OnGet();
         }
     }
 }

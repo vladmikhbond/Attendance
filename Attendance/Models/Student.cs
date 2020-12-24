@@ -18,11 +18,11 @@ namespace Attendance.Models
         public string Patronim { set; get; }
         public string Email { set; get; }
         public string Group { set; get; }
+        //
+        public List<MeetStudent> MeetStudents { set; get; }
 
         [NotMapped]
         public bool IsPresent { set; get; }
-        [NotMapped]
-        public string NameSurname { get => $"{Name} {Surname}"; }
 
     }
 
