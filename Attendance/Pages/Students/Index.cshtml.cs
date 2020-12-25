@@ -25,8 +25,7 @@ namespace Attendance.Pages.Students
         {
             Student = await _context.Students
                 .OrderBy(s => s.Group)
-                .ThenBy(s => s.Surname)
-                .ThenBy(s => s.Name)
+                .ThenBy(s => s.Nick)
                 .ToListAsync();
         }
     }

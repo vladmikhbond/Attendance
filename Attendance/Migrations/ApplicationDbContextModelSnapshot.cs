@@ -65,20 +65,10 @@ namespace Attendance.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Group")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Patronim")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Surname")
+                    b.Property<string>("Nick")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -290,13 +280,13 @@ namespace Attendance.Migrations
             modelBuilder.Entity("Attendance.Models.MeetStudent", b =>
                 {
                     b.HasOne("Attendance.Models.Meet", "Meet")
-                        .WithMany()
+                        .WithMany("MeetStudents")
                         .HasForeignKey("MeetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Attendance.Models.Student", "Student")
-                        .WithMany()
+                        .WithMany("MeetStudents")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -355,6 +345,16 @@ namespace Attendance.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Attendance.Models.Meet", b =>
+                {
+                    b.Navigation("MeetStudents");
+                });
+
+            modelBuilder.Entity("Attendance.Models.Student", b =>
+                {
+                    b.Navigation("MeetStudents");
                 });
 #pragma warning restore 612, 618
         }

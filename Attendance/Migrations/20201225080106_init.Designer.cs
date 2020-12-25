@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Attendance.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201219085337_init")]
+    [Migration("20201225080106_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,11 +50,14 @@ namespace Attendance.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsPresent")
+                        .HasColumnType("bit");
+
                     b.HasKey("MeetId", "StudentId");
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Marks");
+                    b.ToTable("MeetStudents");
                 });
 
             modelBuilder.Entity("Attendance.Models.Student", b =>
@@ -64,20 +67,10 @@ namespace Attendance.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Group")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Patronim")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Surname")
+                    b.Property<string>("Nick")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -289,13 +282,13 @@ namespace Attendance.Migrations
             modelBuilder.Entity("Attendance.Models.MeetStudent", b =>
                 {
                     b.HasOne("Attendance.Models.Meet", "Meet")
-                        .WithMany()
+                        .WithMany("MeetStudents")
                         .HasForeignKey("MeetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Attendance.Models.Student", "Student")
-                        .WithMany()
+                        .WithMany("MeetStudents")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -354,6 +347,16 @@ namespace Attendance.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Attendance.Models.Meet", b =>
+                {
+                    b.Navigation("MeetStudents");
+                });
+
+            modelBuilder.Entity("Attendance.Models.Student", b =>
+                {
+                    b.Navigation("MeetStudents");
                 });
 #pragma warning restore 612, 618
         }

@@ -19,22 +19,15 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Reports/Group">Report</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Reports/Meets">Report</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Students/Index">Studs</a>
                         </li>
 
-                        <li class='nav-link text-dark dropdown'>
-                            <a class='dropdown-toggle' data-toggle='dropdown' style="margin-left:20px;">Students<span class="caret"></span></a>
-                            <ul class='dropdown-menu'>
-                                <li><a class="nav-link text-dark" asp-area="" asp-page="/Students/Index">List</a></li>
-                                <li><a class="nav-link text-dark" asp-area="" asp-page="/Students/Add">Add New</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
+                        @*<li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
+                        </li>*@
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

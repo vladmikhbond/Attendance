@@ -5,52 +5,62 @@
 }
 
 <div class="text-left">
-    
+
     <form id="form1" asp-page="Index" method="post" enctype="multipart/form-data">
-        <p> <input asp-for="UploadedFile" accept="text/html" /> <span asp-validation-for="UploadedFile"></span></p> 
-        <p><input asp-for="GroupFilter" placeholder="your comment" /></p>
-        <p> <input type="submit" value="Uppload" title="Загрузить файл" /></p>
+        <p>
+            <input asp-for="GroupFilter" placeholder="regex for checking groups" />
+            <span style="margin-left:10px; color: darkgray" title="1-й поток">ПЗПІ-20-[12345][^0]</span>
+            <span style="margin-left:10px; color: darkgray" title="2-й поток">ПЗПІ-20-([6789]|10)</span>
+        </p>
+        <p>
+            <input asp-for="UploadedFile" accept="text/html" />
+            <input type="submit" id="submitCheck" value="Check" style="visibility: hidden"/>
+        </p>
     </form>
-    <hr/>
-@if (Model.CheckedStudents != null && Model.CheckedStudents.Length > 0) {
 
-    <form asp-page="Index" asp-page-handler="Save" method="post">
-        <input asp-for="MeetComment" placeholder="your comment"/>
-        <input type="submit" value="Save" title="Сохранить в базе данных"/>
-    </form>
+    <hr />
+    @if (Model.CheckedStudents != null && Model.CheckedStudents.Length > 0)
+    {
 
-    <table>
-        @foreach (var group in Model.CheckedStudents.GroupBy(s => s.Group))
-        {
-            <tr>
-                <td style="font-weight:800">@group.Key (@group.Count(x => x.IsPresent) из @group.Count() )</td>
-            </tr>
-            @foreach (var stud in group)
+        <form asp-page="Index" asp-page-handler="Save" method="post">
+            <input asp-for="MeetComment" placeholder="title for check" />
+            <input type="submit" value="Save" title="Сохранить в базе данных" />
+        </form>
+
+        <table>
+            @foreach (var group in Model.CheckedStudents.GroupBy(s => s.Group))
             {
-                var color = stud.IsPresent ? "black" : "red";
                 <tr>
-                    <td style="text-align:left; color:@color">@stud.Surname @stud.Name</td>
+                    <td style="font-weight:800">@group.Key (@group.Count(x => x.IsPresent) из @group.Count() )</td>
                 </tr>
+                @foreach (var stud in group)
+                {
+                    var color = stud.IsPresent ? "black" : "red";
+                    <tr>
+                        <td style="text-align:left; color:@color">@stud.Nick</td>
+                    </tr>
+                }
             }
-        }
-    </table>
-} 
-else
-{
+        </table>
+    }
+    else
+    {
 <pre>
 На странице встречи надо выбрать вкладку "Участники".
 Встречу надо сохранить как "Вся страница полностью".
-Сохраненный файл .html следует загрузить перетаскиванием или кнопкой "Выбрать файл".
+Сохраненный файл .html следует загрузить перетаскиванием или кнопкой "Выберите файл".
+
+Перед выбором файла в верхнем поле можно задать группы, для которых проводится перекличка.
+Если группы не заданы, перекличка охватит те группы, которых представлены хотя бы одним студентом.
+
 </pre>
-}
+    }
 </div>
 
-@*@section Scripts {
-   <script>
-       // 
-       document.querySelector("#UploadedFile").addEventListener('change', function (e) {
-           document.querySelector("#form1").submit();
-       });
-
-   </script>
-}*@
+@section Scripts {
+    <script>
+        document.querySelector("#UploadedFile").addEventListener("change", function () {
+            document.querySelector("#submitCheck").click();
+        })
+    </script>
+}

@@ -16,9 +16,10 @@ namespace Attendance.Models
             _pattern = pattern;
         }
 
+        // Extract student nicks from HTML file.
+        //
         string[] GetPresentNames(IFormFile uploadedFile)
         {
-            //
             byte[] buffer = new byte[uploadedFile.Length];
             using (var f = uploadedFile.OpenReadStream())
             {
@@ -42,7 +43,7 @@ namespace Attendance.Models
             string[] presentStudentNames = GetPresentNames(uploadedFile);
 
             var presentStudents = db.Students
-                 .Where(s => presentStudentNames.Contains(s.Name + " " + s.Surname))
+                 .Where(s => presentStudentNames.Contains(s.Nick))
                  .ToArray();
 
             // select actual group names
@@ -75,8 +76,7 @@ namespace Attendance.Models
 
             return checkedStudents
                 .OrderBy(s => s.Group)
-                .ThenBy(s => s.Surname)
-                .ThenBy(s => s.Name)
+                .ThenBy(s => s.Nick)
                 .ToArray();
         }
 

@@ -32,27 +32,30 @@ namespace Attendance.Pages
             var studLines = StudentList.Split(new char[]{'\n', '\r'}, StringSplitOptions.RemoveEmptyEntries);
             var newStuds = new List<Student>();
 
-            var errorMes = "";
+            var errorMessge = "";
             foreach (var studLine in studLines)
             {
                 var ss = studLine.Split(new char[] { '\t', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                if (ss.Length < 5)
+                if (ss.Length != 2 && ss.Length != 3)
                 {
-                    errorMes += $"Wrong data: '{studLine}'\n";
+                    errorMessge += $"Wrong data: '{studLine}'\n";
                     continue;
                 }
-                var newStud = new Student { Name = ss[0], Surname = ss[1], Patronim = ss[2], Email = ss[3], Group = ss[4] };
+                var newStud = ss.Length == 3 ?
+                    new Student { Nick = ss[0] + " " + ss[1], Group = ss[2] } :
+                    new Student { Nick = ss[0], Group = ss[1] };
+
                 if (allStuds.Contains(newStud, new StudentComparer()))
                 {
-                    errorMes += $"Not unique: '{studLine}'\n";
+                    errorMessge += $"Not unique: '{studLine}'\n";
                     continue;
                 }
                 newStuds.Add(newStud);
 
             }
-            if (!string.IsNullOrEmpty(errorMes))
+            if (!string.IsNullOrEmpty(errorMessge))
             {
-                ModelState.AddModelError("StudentList", errorMes);
+                ModelState.AddModelError("StudentList", errorMessge);
             }
             
             if (ModelState.IsValid)

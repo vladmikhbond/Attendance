@@ -57,7 +57,7 @@ namespace Attendance.Pages
         {
             var checkedIds = (int[])TempData["checkedIds"];
             
-            // new Meet to DB
+            // put new Meet to DB
             var newMeet = new Meet { 
                 UserName = User.Identity.Name, 
                 When = DateTime.Now, Comment = MeetComment
@@ -65,8 +65,8 @@ namespace Attendance.Pages
             _db.Meets.Add(newMeet);
             _db.SaveChanges();
 
-            // new MeetStudents to DB
-            var newMarks = _db.Students.
+            // put new MeetStudents to DB
+            var newMeetStudents = _db.Students.
                 Where(s => checkedIds.Contains(s.Id) || checkedIds.Contains(-s.Id))
                 .Select(s => new MeetStudent { 
                     StudentId = s.Id, 
@@ -74,7 +74,7 @@ namespace Attendance.Pages
                     IsPresent = checkedIds.Contains(s.Id)
                 });
 
-            _db.MeetStudents.AddRange(newMarks);
+            _db.MeetStudents.AddRange(newMeetStudents);
             _db.SaveChanges();
 
             return RedirectToPage("Index"); 

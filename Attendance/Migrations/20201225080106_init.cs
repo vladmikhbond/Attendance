@@ -67,10 +67,7 @@ namespace Attendance.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Patronim = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Nick = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Group = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -185,23 +182,24 @@ namespace Attendance.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Marks",
+                name: "MeetStudents",
                 columns: table => new
                 {
                     MeetId = table.Column<int>(type: "int", nullable: false),
-                    StudentId = table.Column<int>(type: "int", nullable: false)
+                    StudentId = table.Column<int>(type: "int", nullable: false),
+                    IsPresent = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Marks", x => new { x.MeetId, x.StudentId });
+                    table.PrimaryKey("PK_MeetStudents", x => new { x.MeetId, x.StudentId });
                     table.ForeignKey(
-                        name: "FK_Marks_Meets_MeetId",
+                        name: "FK_MeetStudents_Meets_MeetId",
                         column: x => x.MeetId,
                         principalTable: "Meets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Marks_Students_StudentId",
+                        name: "FK_MeetStudents_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "Id",
@@ -248,8 +246,8 @@ namespace Attendance.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Marks_StudentId",
-                table: "Marks",
+                name: "IX_MeetStudents_StudentId",
+                table: "MeetStudents",
                 column: "StudentId");
         }
 
@@ -271,7 +269,7 @@ namespace Attendance.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Marks");
+                name: "MeetStudents");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
