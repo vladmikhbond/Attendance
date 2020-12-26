@@ -9,7 +9,7 @@ using Attendance.Data;
 using Attendance.Models;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Attendance.Pages.Students
+namespace Attendance.Pages.Meets
 {
     [Authorize]
     public class DeleteModel : PageModel
@@ -22,7 +22,7 @@ namespace Attendance.Pages.Students
         }
 
         [BindProperty]
-        public Student Student { get; set; }
+        public Meet Meet { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -31,9 +31,9 @@ namespace Attendance.Pages.Students
                 return NotFound();
             }
 
-            Student = await _context.Students.FirstOrDefaultAsync(m => m.Id == id);
+            Meet = await _context.Meets.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (Student == null)
+            if (Meet == null)
             {
                 return NotFound();
             }
@@ -47,11 +47,11 @@ namespace Attendance.Pages.Students
                 return NotFound();
             }
 
-            Student = await _context.Students.FindAsync(id);
+            Meet = await _context.Meets.FindAsync(id);
 
-            if (Student != null)
+            if (Meet != null)
             {
-                _context.Students.Remove(Student);
+                _context.Meets.Remove(Meet);
                 await _context.SaveChangesAsync();
             }
 

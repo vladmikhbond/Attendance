@@ -1,5 +1,5 @@
 ﻿@page
-@model Attendance.Pages.Students.IndexModel
+@model Attendance.Pages.Meets.IndexModel
 
 @{
     ViewData["Title"] = "Index";
@@ -7,31 +7,28 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-page="Add">Add New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Student[0].Group)
+                @Html.DisplayNameFor(model => model.Meet[0].When)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Student[0].Nick)
+                @Html.DisplayNameFor(model => model.Meet[0].Comment)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Student) {
+@foreach (var item in Model.Meet) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Group)
+                @Html.DisplayFor(modelItem => item.When)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Nick)
+                @Html.DisplayFor(modelItem => item.Comment)
             </td>
-             <td>
+            <td>
                 <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
             </td>

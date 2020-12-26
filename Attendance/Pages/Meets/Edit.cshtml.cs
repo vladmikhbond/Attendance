@@ -10,7 +10,7 @@ using Attendance.Data;
 using Attendance.Models;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Attendance.Pages.Students
+namespace Attendance.Pages.Meets
 {
     [Authorize]
     public class EditModel : PageModel
@@ -23,7 +23,7 @@ namespace Attendance.Pages.Students
         }
 
         [BindProperty]
-        public Student Student { get; set; }
+        public Meet Meet { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -32,9 +32,9 @@ namespace Attendance.Pages.Students
                 return NotFound();
             }
 
-            Student = await _context.Students.FirstOrDefaultAsync(m => m.Id == id);
+            Meet = await _context.Meets.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (Student == null)
+            if (Meet == null)
             {
                 return NotFound();
             }
@@ -50,7 +50,7 @@ namespace Attendance.Pages.Students
                 return Page();
             }
 
-            _context.Attach(Student).State = EntityState.Modified;
+            _context.Attach(Meet).State = EntityState.Modified;
 
             try
             {
@@ -58,7 +58,7 @@ namespace Attendance.Pages.Students
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!StudentExists(Student.Id))
+                if (!MeetExists(Meet.Id))
                 {
                     return NotFound();
                 }
@@ -71,9 +71,9 @@ namespace Attendance.Pages.Students
             return RedirectToPage("./Index");
         }
 
-        private bool StudentExists(int id)
+        private bool MeetExists(int id)
         {
-            return _context.Students.Any(e => e.Id == id);
+            return _context.Meets.Any(e => e.Id == id);
         }
     }
 }

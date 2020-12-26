@@ -9,7 +9,7 @@ using Attendance.Data;
 using Attendance.Models;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Attendance.Pages.Students
+namespace Attendance.Pages.Meets
 {
     [Authorize]
     public class IndexModel : PageModel
@@ -21,13 +21,12 @@ namespace Attendance.Pages.Students
             _context = context;
         }
 
-        public IList<Student> Student { get;set; }
+        public IList<Meet> Meet { get;set; }
 
         public async Task OnGetAsync()
         {
-            Student = await _context.Students
-                .OrderBy(s => s.Group)
-                .ThenBy(s => s.Nick)
+            Meet = await _context.Meets
+                .Where(m => m.UserName == User.Identity.Name)
                 .ToListAsync();
         }
     }
