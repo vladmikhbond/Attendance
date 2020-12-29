@@ -31,15 +31,15 @@
                     </tr>
                     @foreach (var stud in Model.Students)
                     {
-                        <tr>
-                            <td style="text-align:left; ">@stud.ReverseName</td>
-                            @foreach (var meet in Model.Meets)
-                            {
-                                var ms = meet.MeetStudents.Single(ms => ms.StudentId == stud.Id);
-                                var mark = ms.IsPresent ? " " : "n";
-                                <td>@mark</td>
-                            }
-                        </tr>
+                    <tr>
+                        <td style="text-align:left;">@stud.ReverseName</td>
+                    @foreach (var meet in Model.Meets)
+                    {
+                        var ms = meet.MeetStudents.Single(ms => ms.StudentId == stud.Id);
+                        var mark = ms.IsPresent ? " " : "n";
+                        <td class="active" ondblclick="tooglePresenсе(@ms.MeetId, @ms.StudentId, '@ms.IsPresent', this)">@mark</td>
+                    }
+                    </tr>
                     }
                    
                 </table>
@@ -53,5 +53,24 @@
         document.querySelector("#group").addEventListener("change", function() {
             document.querySelector("#submit").click();
         })
+        
+        async function tooglePresenсе(meetId, studentId, isPresent, source)
+        {
+            const data = { MeetId: meetId, StudentId: studentId, IsPresent: isPresent };
+            const url = '/Reports/Group?handler=Ajax';
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    RequestVerificationToken:
+                        $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                body: JSON.stringify(data)
+            });
+
+            const ms = await response.json(); 
+            source.innerHTML = ms.isPresent ? "" : "n";
+        }
     </script>
 }

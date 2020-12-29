@@ -29,8 +29,11 @@ namespace Attendance.Pages
         [BindProperty]
         public string MeetComment { set; get; }
 
+        //[BindNever]
+        //public Student[] CheckedStudents { set; get; }
+        
         [BindNever]
-        public Student[] CheckedStudents { set; get; }
+        public IEnumerable<IGrouping<string, Student>> GroupedStudents { set; get; }
 
         public IndexModel(ApplicationDbContext db, Process process)
         {
@@ -47,9 +50,14 @@ namespace Attendance.Pages
         {
             if (ModelState.IsValid)
             {
-                CheckedStudents = _process.DoCheck(UploadedFile, _db, GroupFilter);
+                var checkedStudents = _process.DoCheck(UploadedFile, _db, GroupFilter);
+
+                GroupedStudents = checkedStudents
+                    .GroupBy(s => s.Group)
+                    .OrderBy(s => s.Key.Replace("-10", "-A"));
+
                 // Do negative Id of students which are absent.
-                TempData["checkedIds"] = CheckedStudents.Select(s => s.IsPresent ? s.Id : -s.Id).ToArray();
+                TempData["checkedIds"] = checkedStudents.Select(s => s.IsPresent ? s.Id : -s.Id).ToArray();
             }
         }
 

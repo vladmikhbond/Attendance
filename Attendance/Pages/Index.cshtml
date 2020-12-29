@@ -6,20 +6,20 @@
 
 <div class="text-left">
 
-    <form id="form1" asp-page="Index" method="post" enctype="multipart/form-data">
+    <form id="form1" asp-page="Index" method="post" enctype="multipart/form-data"  >
         <p>
-            <input asp-for="GroupFilter" placeholder="regex for checking groups" />
+            <input asp-for="GroupFilter" placeholder="regex for checking groups"/>
             <span style="margin-left:10px; color: darkgray" title="1-й поток">ПЗПІ-20-[12345][^0]</span>
             <span style="margin-left:10px; color: darkgray" title="2-й поток">ПЗПІ-20-([6789]|10)</span>
         </p>
         <p>
-            <input asp-for="UploadedFile" accept="text/html" />
+            <input asp-for="UploadedFile" accept="text/html"  lang="en"/>
             <input type="submit" id="submitCheck" value="Check" style="visibility: hidden"/>
         </p>
     </form>
 
     <hr />
-    @if (Model.CheckedStudents != null && Model.CheckedStudents.Length > 0)
+    @if (Model.GroupedStudents != null && Model.GroupedStudents.Count() > 0)
     {
 
         <form asp-page="Index" asp-page-handler="Save" method="post">
@@ -28,7 +28,7 @@
         </form>
 
         <table>
-            @foreach (var group in Model.CheckedStudents.GroupBy(s => s.Group))
+            @foreach (var group in Model.GroupedStudents)
             {
                 <tr>
                     <td style="font-weight:800">@group.Key (@group.Count(x => x.IsPresent) из @group.Count() )</td>
@@ -46,12 +46,12 @@
     else
     {
 <pre>
-На странице встречи надо выбрать вкладку "Участники".
-Встречу надо сохранить как "Вся страница полностью".
-Сохраненный файл .html следует загрузить перетаскиванием или кнопкой "Выберите файл".
+На странице встречи выбрать вкладку "Участники" (должны показаться имена участников)
+Сохранить встречу как "Webpage, Complete".
+Сохраненный html-файл загрузить перетаскиванием или кнопкой "Choose File".
 
 Перед выбором файла в верхнем поле можно задать группы, для которых проводится перекличка.
-Если группы не заданы, перекличка охватит те группы, которых представлены хотя бы одним студентом.
+Если группы не заданы, перекличка охватит те группы, которых представлены на встрече хотя бы одним студентом.
 
 </pre>
     }
@@ -59,6 +59,8 @@
 
 @section Scripts {
     <script>
+        document.querySelector("#GroupFilter").textContent = "123";
+
         document.querySelector("#UploadedFile").addEventListener("change", function () {
             document.querySelector("#submitCheck").click();
         })

@@ -11,10 +11,17 @@ namespace Attendance.Models
         public int MeetId { set; get; }
         public int StudentId { set; get; }
         [Required]
-        public bool IsPresent { set; get; } 
+        public bool IsPresent { set; get; }
         //
         public Meet Meet { set; get; }
         public Student Student { set; get; }
+    }
+
+    public class MeetStudentViewModel
+    {
+        public int MeetId { set; get; }
+        public int StudentId { set; get; }
+        public string IsPresent { set; get; }
     }
 
 }

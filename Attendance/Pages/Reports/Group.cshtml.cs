@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,6 +25,8 @@ namespace Attendance.Pages.Reports
         }
         [BindProperty]
         public string Group { set; get; }
+        //[BindProperty]
+        //public MeetStudent MeetStudent { set; get; }
 
         [BindNever]
         public string[] Groups { set; get; }
@@ -39,22 +41,21 @@ namespace Attendance.Pages.Reports
                 .Select(s => s.Group)
                 .Distinct()
                 .ToArray();
+
+            // Special ordering of the groups
+            Groups = Groups.OrderBy(s => s.Replace("-10", "-A")).ToArray();
         }
 
         public void OnPost()
-        {   
-            // All groups
-            Groups = _db.Students
-                .Select(s => s.Group)
-                .Distinct()
-                .ToArray();
+        {
+            OnGet();
 
             // All students from the selected group
             var students = _db.Students
                 .Where(s => s.Group == Group)
                 .Include(s => s.MeetStudents)
                 .ToArray();
-            
+
             Students = students.OrderBy(s => s.ReverseName).ToArray();
 
             // All meets of the User
@@ -68,6 +69,21 @@ namespace Attendance.Pages.Reports
             Meets = Meets
                 .Where(m => m.MeetStudents.Intersect(groupMeetStudents).Any())
                 .ToArray();
+        }
+
+
+        
+        public JsonResult OnPostAjax([FromBody] MeetStudentViewModel ms)
+        {
+            if (ModelState.IsValid)
+            {
+                var meetStudent = _db.MeetStudents.Find(ms.MeetId, ms.StudentId);
+                meetStudent.IsPresent = !meetStudent.IsPresent;
+                _db.SaveChanges();
+                return new JsonResult(meetStudent);
+            }
+            return new JsonResult("ERROR");
+
         }
 
     }
