@@ -37,7 +37,7 @@
                     {
                         var ms = meet.MeetStudents.Single(ms => ms.StudentId == stud.Id);
                         var mark = ms.IsPresent ? " " : "n";
-                        <td class="active" ondblclick="tooglePresenсе(@ms.MeetId, @ms.StudentId, '@ms.IsPresent', this)">@mark</td>
+                        <td class="active" onclick="tooglePresenсе(@ms.MeetId, @ms.StudentId, '@ms.IsPresent', this)">@mark</td>
                     }
                     </tr>
                     }
@@ -45,6 +45,7 @@
                 </table>
             } 
         </div>
+        Alt+click - to toogle mark
     </div>
 </div>
 
@@ -56,21 +57,23 @@
         
         async function tooglePresenсе(meetId, studentId, isPresent, source)
         {
-            const data = { MeetId: meetId, StudentId: studentId, IsPresent: isPresent };
-            const url = '/Reports/Group?handler=Ajax';
+            if (event.altKey) {
+                const data = { MeetId: meetId, StudentId: studentId, IsPresent: isPresent };
+                const url = '/Reports/Group?handler=Ajax';
 
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    RequestVerificationToken:
-                        $('input:hidden[name="__RequestVerificationToken"]').val()
-                },
-                body: JSON.stringify(data)
-            });
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        RequestVerificationToken:
+                            $('input:hidden[name="__RequestVerificationToken"]').val()
+                    },
+                    body: JSON.stringify(data)
+                });
 
-            const ms = await response.json(); 
-            source.innerHTML = ms.isPresent ? "" : "n";
+                const ms = await response.json();
+                source.innerHTML = ms.isPresent ? "" : "n";
+            }
         }
     </script>
 }
