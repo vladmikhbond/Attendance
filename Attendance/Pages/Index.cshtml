@@ -8,7 +8,7 @@
 
     <form id="form1" asp-page="Index" method="post" enctype="multipart/form-data"  >
         <p>
-            <input asp-for="GroupFilter" placeholder="regex for checking groups"/>
+            <input asp-for="GroupFilter" placeholder="regex for checking groups" style="width: 50%"/>
             <span style="margin-left:10px; color: darkgray" title="1-й поток">ПЗПІ-20-[12345][^0]</span>
             <span style="margin-left:10px; color: darkgray" title="2-й поток">ПЗПІ-20-([6789]|10)</span>
         </p>
@@ -23,7 +23,7 @@
     {
 
         <form asp-page="Index" asp-page-handler="Save" method="post">
-            <input asp-for="MeetComment" placeholder="title for check" />
+            <input asp-for="MeetComment" placeholder="your comment if needed" style="width: 50%"/>
             <input type="submit" value="Save" title="Сохранить в базе данных" />
         </form>
 

@@ -23,10 +23,10 @@
                     <tr style="font-weight:800">
                         <td>@Model.Group (total @Model.Students.Count())</td>
 
-                        @foreach (var meet in Model.Meets)
+                        @for (int i = 0; i < Model.Meets.Length; i++)
                         {
-                            string s = (meet.Comment + "  ").Substring(0, 2);
-                            <td title="@meet.Comment (@meet.When)" style="width:20px">@s</td>
+                            var meet = Model.Meets[i];
+                            <td title="@meet.Comment (@meet.When)" style="width:20px">@((i + 1) % 10)</td>
                         }
                     </tr>
                     @foreach (var stud in Model.Students)
