@@ -11,6 +11,7 @@ namespace Attendance.Data
     public class ApplicationDbContext : IdentityDbContext
     {
         public DbSet<Student> Students { set; get; }
+        public DbSet<Group> Groups { set; get; }
         public DbSet<Meet> Meets { set; get; }
         public DbSet<MeetStudent> MeetStudents { set; get; }
 

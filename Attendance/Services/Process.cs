@@ -1,5 +1,6 @@
 ﻿using Attendance.Data;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +43,7 @@ namespace Attendance.Models
             // select present students
             string[] presentStudentNames = GetPresentNames(uploadedFile);
 
-            var presentStudents = db.Students
+            var presentStudents = db.Students.Include(s => s.Group)
                  .Where(s => presentStudentNames.Contains(s.Nick))
                  .ToArray();
 
@@ -51,7 +52,7 @@ namespace Attendance.Models
             if (string.IsNullOrWhiteSpace(groupFilter))
             {
                 presentGroups = presentStudents
-                    .Select(s => s.Group)
+                    .Select(s => s.Group.Name)
                     .Distinct().ToArray();
             } 
             else
@@ -60,13 +61,13 @@ namespace Attendance.Models
                 var v = db.Students
                     .Select(s => s.Group).Distinct()
                     .ToArray();
-                presentGroups = v.Where(g => regex.IsMatch(g))
+                presentGroups = v.Where(g => regex.IsMatch(g.Name)).Select(g => g.Name)
                     .ToArray();                
             }
 
             // students from checked groups with isPresent prop
             var checkedStudents = db.Students
-                .Where(s => presentGroups.Contains(s.Group))
+                .Where(s => presentGroups.Contains(s.Group.Name))
                 .ToArray();
 
             for (int i = 0; i < checkedStudents.Length; i++)
@@ -75,7 +76,7 @@ namespace Attendance.Models
             }
 
             return checkedStudents
-                .OrderBy(s => s.Group)
+                .OrderBy(s => s.Group.Name)
                 .ThenBy(s => s.Nick)
                 .ToArray();
         }

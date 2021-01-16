@@ -38,7 +38,7 @@ namespace Attendance.Pages.Reports
         public void OnGet()
         {
             Groups = _db.Students
-                .Select(s => s.Group)
+                .Select(s => s.Group.Name)
                 .Distinct()
                 .ToArray();
 
@@ -52,7 +52,7 @@ namespace Attendance.Pages.Reports
 
             // All students from the selected group
             var students = _db.Students
-                .Where(s => s.Group == Group)
+                .Where(s => s.Group.Name == Group)
                 .Include(s => s.MeetStudents)
                 .ToArray();
 

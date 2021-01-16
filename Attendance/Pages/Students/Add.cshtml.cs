@@ -29,44 +29,52 @@ namespace Attendance.Pages
 
         public IActionResult OnPost()
         {
-            var allStuds = _db.Students.ToArray();
-            
-            var studLines = StudentList.Split(new char[]{'\n', '\r'}, StringSplitOptions.RemoveEmptyEntries);
-            var newStuds = new List<Student>();
+            // 0-name  1-surname   2-group name
+            var ree = StringSplitOptions.RemoveEmptyEntries;
+            var table = StudentList
+                .Split(new char[] { '\n', '\r' }, ree)
+                .Select(s => s.Split('\t'));
 
-            var errorMessge = "";
-            foreach (var studLine in studLines)
+            int lineNo = 1;
+            foreach (var a in table)
             {
-                var ss = studLine.Split(new char[] { '\t', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                if (ss.Length != 2 && ss.Length != 3)
+                if (a.Length != 3)
+                    ModelState.AddModelError("StudentList", $"ERROR in line {lineNo}");
+                lineNo++;
+            }
+            if (!ModelState.IsValid)
+                return null;
+
+            // add new groups
+            var oldGroupNames = _db.Groups.Select(g => g.Name).ToArray();
+
+            var newGroups = table
+                .Select(a => a[2])
+                .Distinct()
+                .Except(oldGroupNames)
+                .Select(n => new Group { Name = n });
+
+            _db.Groups.AddRange(newGroups);
+            _db.SaveChanges();
+
+
+
+            // add new students
+            var oldTokens = _db.Students.ToArray()
+                .Select(s => $"{s.GroupId} {s.Nick}");
+
+            var newStudents = table
+                .Select(a => new Student
                 {
-                    errorMessge += $"Wrong data: '{studLine}'\n";
-                    continue;
-                }
-                var newStud = ss.Length == 3 ?
-                    new Student { Nick = ss[0] + " " + ss[1], Group = ss[2] } :
-                    new Student { Nick = ss[0], Group = ss[1] };
+                    Nick = $"{a[0]} {a[1]}".Trim(),
+                    GroupId = _db.Groups.Single(g => g.Name == a[2]).Id
+                })
+                .Where(s => !oldTokens.Contains($"{s.GroupId} {s.Nick}"));
 
-                if (allStuds.Contains(newStud, new StudentComparer()))
-                {
-                    errorMessge += $"Not unique: '{studLine}'\n";
-                    continue;
-                }
-                newStuds.Add(newStud);
+            _db.Students.AddRange(newStudents);
+            _db.SaveChanges();
 
-            }
-            if (!string.IsNullOrEmpty(errorMessge))
-            {
-                ModelState.AddModelError("StudentList", errorMessge);
-            }
-            
-            if (ModelState.IsValid)
-            {
-                _db.Students.AddRange(newStuds);
-                _db.SaveChanges();
-                return RedirectToPage("Index");
-            }
-            return null;
+            return RedirectToPage("Index");
         }
     }
 }

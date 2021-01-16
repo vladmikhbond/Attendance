@@ -26,7 +26,7 @@
 @foreach (var item in Model.Student) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Group)
+                @Html.DisplayFor(modelItem => item.Group.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Nick)

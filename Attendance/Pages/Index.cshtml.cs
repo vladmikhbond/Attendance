@@ -19,6 +19,9 @@ namespace Attendance.Pages
     [Authorize]
     public class IndexModel : PageModel
     {
+        internal const string GROUPS_FILTER_NAME = "Groups";
+
+
         private readonly ApplicationDbContext _db;
         private readonly Process _process;
 
@@ -28,12 +31,11 @@ namespace Attendance.Pages
         public string GroupFilter { set; get; }
         [BindProperty]
         public string MeetComment { set; get; }
-
-        //[BindNever]
-        //public Student[] CheckedStudents { set; get; }
-        
+      
         [BindNever]
         public IEnumerable<IGrouping<string, Student>> GroupedStudents { set; get; }
+        [BindNever]
+        public string FilterValue { set; get; }
 
         public IndexModel(ApplicationDbContext db, Process process)
         {
@@ -42,7 +44,8 @@ namespace Attendance.Pages
         }
 
         public void OnGet()
-        {         
+        {
+            FilterValue = FilterModel.Value(GROUPS_FILTER_NAME, HttpContext);
         }
 
         
@@ -50,14 +53,16 @@ namespace Attendance.Pages
         {
             if (ModelState.IsValid)
             {
-                var checkedStudents = _process.DoCheck(UploadedFile, _db, GroupFilter);
+                FilterValue = FilterModel.Value(GROUPS_FILTER_NAME, HttpContext);
+
+                var checkedStudents = _process.DoCheck(UploadedFile, _db, FilterValue);
 
                 GroupedStudents = checkedStudents
-                    .GroupBy(s => s.Group)
+                    .GroupBy(s => s.Group.Name)
                     .OrderBy(s => s.Key.Replace("-10", "-A"));
 
                 // Do negative Id of students which are absent.
-                TempData["checkedIds"] = checkedStudents.Select(s => s.IsPresent ? s.Id : -s.Id).ToArray();
+                TempData["checkedIds"] = checkedStudents.Select(s => s.IsPresent ? s.Id : -s.Id).ToArray();                            
             }
         }
 

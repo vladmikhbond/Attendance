@@ -8,11 +8,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Attendance.Data;
 using Attendance.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Attendance.Pages.Students
 {
-    [Authorize]
     public class EditModel : PageModel
     {
         private readonly Attendance.Data.ApplicationDbContext _context;
@@ -32,12 +30,14 @@ namespace Attendance.Pages.Students
                 return NotFound();
             }
 
-            Student = await _context.Students.FirstOrDefaultAsync(m => m.Id == id);
+            Student = await _context.Students
+                .Include(s => s.Group).FirstOrDefaultAsync(m => m.Id == id);
 
             if (Student == null)
             {
                 return NotFound();
             }
+           ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name");
             return Page();
         }
 

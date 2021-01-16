@@ -13,28 +13,24 @@ namespace Attendance.Models
         public int Id { set; get; }
         [Required]
         public string Nick { set; get; }
-        public string Group { set; get; }
+        public int GroupId { set; get; }
         //
+        public Group Group { set; get; }
         public List<MeetStudent> MeetStudents { set; get; }
 
         [NotMapped]
         public bool IsPresent { set; get; }
-
-        public string ReverseName {
+        [NotMapped]
+        public string ReverseName
+        {
             get
             {
+                if (Nick == null) 
+                    return null;
                 var ss = Nick.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 return ss.Length == 1 ? ss[0] : $"{ss[1]} {ss[0]}";
             }
-        }       
+        }
     }
 
-    public class StudentComparer : IEqualityComparer<Student>
-    {
-        public bool Equals(Student x, Student y) =>
-            x.Nick == y.Nick && x.Group == y.Group;
-
-        public int GetHashCode([DisallowNull] Student obj) =>
-            obj.GetHashCode();
-    }
 }

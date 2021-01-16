@@ -8,10 +8,18 @@
 
     <form id="form1" asp-page="Index" method="post" enctype="multipart/form-data"  >
         <p>
-            <input asp-for="GroupFilter" placeholder="regex for checking groups" style="width: 50%"/>
+            <a asp-page="Filter" asp-route-returnUrl="Index"
+               asp-route-filterName="@IndexModel.GROUPS_FILTER_NAME" style="margin-left: 40px" title="Filter">
+                Filter
+               <span class="badge-warning" title="Lecture Name Filter">@Model.FilterValue</span>
+            </a>  
+            
+            
             <span style="margin-left:10px; color: darkgray" title="1-й поток">ПЗПІ-20-[12345][^0]</span>
             <span style="margin-left:10px; color: darkgray" title="2-й поток">ПЗПІ-20-([6789]|10)</span>
         </p>
+
+
         <p>
             <input asp-for="UploadedFile" accept="text/html"  lang="en"/>
             <input type="submit" id="submitCheck" value="Check" style="visibility: hidden"/>
@@ -45,6 +53,7 @@
     }
     else
     {
+<h3>Инструкция</h3>
 <pre>
 На странице встречи выбрать вкладку "Участники" (должны показаться имена участников)
 Сохранить встречу как "Webpage, Complete".
@@ -59,8 +68,6 @@
 
 @section Scripts {
     <script>
-        document.querySelector("#GroupFilter").textContent = "123";
-
         document.querySelector("#UploadedFile").addEventListener("change", function () {
             document.querySelector("#submitCheck").click();
         })

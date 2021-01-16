@@ -25,8 +25,8 @@ namespace Attendance.Pages.Students
 
         public async Task OnGetAsync()
         {
-            Student = await _context.Students
-                .OrderBy(s => s.Group)
+            Student = await _context.Students.Include(s => s.Group)
+                .OrderBy(s => s.Group.Name)
                 .ThenBy(s => s.Nick)
                 .ToListAsync();
         }
