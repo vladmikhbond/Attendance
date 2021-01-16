@@ -19,7 +19,7 @@ namespace Attendance.Pages
     [Authorize]
     public class IndexModel : PageModel
     {
-        internal const string GROUPS_FILTER_NAME = "Groups";
+        public const string GROUPS_FILTER_NAME = "Groups";
 
 
         private readonly ApplicationDbContext _db;

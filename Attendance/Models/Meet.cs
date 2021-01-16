@@ -8,7 +8,7 @@ namespace Attendance.Models
     public class Meet
     {
         public int Id { set; get; }
-        public string UserName { set; get; }
+        public string UserName { set; get; }  // owner
         public DateTime When { set; get; }
         public string Comment { set; get; }
         //
