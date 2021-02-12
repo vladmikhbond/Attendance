@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Primitives;
 
 namespace Attendance.Pages
 {
@@ -18,7 +20,8 @@ namespace Attendance.Pages
         public string FilterValue { set; get; }
         [BindProperty(SupportsGet = true)]
         public string ReturnUrl { set; get; }
-        public string Command { set; get; }
+        //[BindRequired]
+        //public StringValues Command { set; get; }
 
         public void OnGet()
         {
@@ -29,11 +32,11 @@ namespace Attendance.Pages
 
         }
 
-        public IActionResult OnPost()
+        public IActionResult OnPost([FromForm] string command)
         {
             var cookieName = TempData["indiFilterName"].ToString();
 
-            if (Command == "Clear")
+            if (command == "Clear")
             {
                 Response.Cookies.Delete(cookieName);
             }

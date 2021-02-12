@@ -56,6 +56,11 @@ namespace Attendance.Pages
                 FilterValue = FilterModel.Value(GROUPS_FILTER_NAME, HttpContext);
 
                 var checkedStudents = _process.DoCheck(UploadedFile, _db, FilterValue);
+                if (checkedStudents.Length == 0)
+                {
+                    ModelState.AddModelError("UploadedFile", "No registered students");
+                }
+
 
                 GroupedStudents = checkedStudents
                     .GroupBy(s => s.Group.Name)
