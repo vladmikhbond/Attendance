@@ -2,9 +2,9 @@
 @model Attendance.Pages.NewStudentsModel
 @{
 }
-<h2>New</h2>
 <form asp-page="NewStudents">
-    <textarea asp-for="StudentList" cols="80"></textarea>
+    
+    <textarea asp-for="StudentList" cols="80" placeholder="имя\tфамилия\tгруппа"></textarea>
     <div>
         <span asp-validation-for="StudentList" style="white-space: pre"></span>
     </div>
