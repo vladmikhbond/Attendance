@@ -15,6 +15,7 @@ namespace Attendance50.Models
         public string Name { set; get; }
         public string Surname { set; get; }
         public string Nick { set; get; }
+        public int GroupId { set; get; }
         //
         public Group Group { set; get; }
         public List<CheckStudent> CheckStudents { set; get; }
