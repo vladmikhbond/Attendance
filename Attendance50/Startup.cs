@@ -1,5 +1,5 @@
-using Attendance.Data;
-using Attendance.Models;
+using Attendance50.Data;
+using Attendance50.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -7,16 +7,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Attendance
+namespace Attendance50
 {
     public class Startup
     {
@@ -33,10 +31,9 @@ namespace Attendance
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-
             services.AddDatabaseDeveloperPageExceptionFilter();
-            
-            services.AddDefaultIdentity<IdentityUser>(options => { 
+            services.AddDefaultIdentity<IdentityUser>(options =>
+            {
                 options.SignIn.RequireConfirmedAccount = true;
                 options.Password.RequireDigit = false;
                 options.Password.RequireLowercase = false;
@@ -46,11 +43,9 @@ namespace Attendance
                 options.SignIn.RequireConfirmedAccount = false;
                 options.SignIn.RequireConfirmedEmail = false;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
-            })
+            })            
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-
             services.AddRazorPages();
-
             //  "<span class=\"ZjFb7c\">(.*?)<\\/span>"
             services.AddScoped(_ => new Process(Configuration["pattern"]));
         }

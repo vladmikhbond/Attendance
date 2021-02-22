@@ -53,17 +53,14 @@ AspnetUsers - преподаватели
 	  UserName
 	  Name
  
-	FlowStudents 
-   
 	Checks
 	  Id
 	  When - дата, время
 	  FlowId 
   
-
+	FlowStudents 
+   
 	CheckStudents 
-	  CheckId
-	  StudentId
 
 ## Комментарии
 
