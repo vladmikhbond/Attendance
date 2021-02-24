@@ -11,7 +11,8 @@ namespace Attendance50.Models
         public int Id { set; get; }
         [Required]
         public string Name { set; get; }
-        [Required]
         public string UserName { set; get; }
+        //
+        public List<FlowStudent> FlowStudents { set; get; }
     }
 }

@@ -20,7 +20,7 @@ namespace Attendance50.Services
 
         // Extract student nicks from HTML file.
         //
-        string[] GetPresentNames(IFormFile uploadedFile)
+        public string[] GetPresentNames(IFormFile uploadedFile)
         {
             byte[] buffer = new byte[uploadedFile.Length];
             using (var f = uploadedFile.OpenReadStream())
@@ -39,48 +39,48 @@ namespace Attendance50.Services
 
         // Call when a user upploads html file
         //
-        public Student[] DoCheck(IFormFile uploadedFile, ApplicationDbContext db, string groupFilter)
-        {
-            // select present students
-            string[] presentStudentNames = GetPresentNames(uploadedFile);
+        //public Student[] DoCheck(IFormFile uploadedFile, ApplicationDbContext db, string groupFilter)
+        //{
+        //    // select present students
+        //    string[] presentStudentNames = GetPresentNames(uploadedFile);
 
-            var presentStudents = db.Students.Include(s => s.Group)
-                 .Where(s => presentStudentNames.Contains(s.Nick))
-                 .ToArray();
+        //    var presentStudents = db.Students.Include(s => s.Group)
+        //         .Where(s => presentStudentNames.Contains(s.Nick))
+        //         .ToArray();
 
-            // select actual group names
-            string[] presentGroups;
-            if (string.IsNullOrWhiteSpace(groupFilter))
-            {
-                presentGroups = presentStudents
-                    .Select(s => s.Group.Name)
-                    .Distinct().ToArray();
-            } 
-            else
-            {
-                Regex regex = new Regex(groupFilter);
-                var v = db.Students
-                    .Select(s => s.Group).Distinct()
-                    .ToArray();
-                presentGroups = v.Where(g => regex.IsMatch(g.Name)).Select(g => g.Name)
-                    .ToArray();                
-            }
+        //    // select actual group names
+        //    string[] presentGroups;
+        //    if (string.IsNullOrWhiteSpace(groupFilter))
+        //    {
+        //        presentGroups = presentStudents
+        //            .Select(s => s.Group.Name)
+        //            .Distinct().ToArray();
+        //    } 
+        //    else
+        //    {
+        //        Regex regex = new Regex(groupFilter);
+        //        var v = db.Students
+        //            .Select(s => s.Group).Distinct()
+        //            .ToArray();
+        //        presentGroups = v.Where(g => regex.IsMatch(g.Name)).Select(g => g.Name)
+        //            .ToArray();                
+        //    }
 
-            // students from checked groups with isPresent prop
-            var checkedStudents = db.Students
-                .Where(s => presentGroups.Contains(s.Group.Name))
-                .ToArray();
+        //    // students from checked groups with isPresent prop
+        //    var checkedStudents = db.Students
+        //        .Where(s => presentGroups.Contains(s.Group.Name))
+        //        .ToArray();
 
-            for (int i = 0; i < checkedStudents.Length; i++)
-            {
-                checkedStudents[i].IsPresent = presentStudents.Contains(checkedStudents[i]);
-            }
+        //    for (int i = 0; i < checkedStudents.Length; i++)
+        //    {
+        //        checkedStudents[i].IsPresent = presentStudents.Contains(checkedStudents[i]);
+        //    }
 
-            return checkedStudents
-                .OrderBy(s => s.Group.Name)
-                .ThenBy(s => s.Nick)
-                .ToArray();
-        }
+        //    return checkedStudents
+        //        .OrderBy(s => s.Group.Name)
+        //        .ThenBy(s => s.Nick)
+        //        .ToArray();
+        //}
 
     }
 }

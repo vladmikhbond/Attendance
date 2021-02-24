@@ -8,11 +8,10 @@ namespace Attendance50.Models
     public class Check
     {
         public int Id { set; get; }
-        public int Flow { set; get; }  // owner
+        public int FlowId { set; get; }  
         public DateTime When { set; get; }
-        public string Comment { set; get; }
         //
-        public List<CheckStudent> MeetStudents { set; get; }
+        public List<CheckStudent> CheckStudents { set; get; }
     }
 
 }

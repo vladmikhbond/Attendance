@@ -1,0 +1,59 @@
+﻿@page
+@model Attendance50.Pages.Flows.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Flow</h4>
+<hr />
+<a asp-page="..\Shared\Filter" asp-route-returnUrl="/Flows/Edit?id=@Model.Flow.Id"
+   asp-route-filterName="@CreateModel.GROUPS_FILTER_NAME" style="margin-left: 40px" title="Filter">
+    Group Filter
+    <span class="badge-warning" title="Lecture Name Filter">@Model.FilterValue</span>
+</a>
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Flow.Id" />
+            <div class="form-group">
+                <label asp-for="Flow.Name" class="control-label"></label>
+                <input asp-for="Flow.Name" class="form-control" />
+                <span asp-validation-for="Flow.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div>
+                    @*<select size="25" asp-for="StudentIds" class="form-control" asp-items="Model.StudentIds"></select>*@
+                    <select size="25" class="form-control" name="StudentIds" multiple="multiple">
+                        @foreach (var stud in Model.AllStudents)
+                        {
+                            if (stud.IsSelected)
+                            {
+                                <option selected value="@stud.Id">@stud.Info</option>
+                            }
+                            else
+                            {
+                                <option value="@stud.Id">@stud.Info</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

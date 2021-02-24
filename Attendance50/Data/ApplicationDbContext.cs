@@ -14,6 +14,7 @@ namespace Attendance50.Data
         public DbSet<Check> Checks { set; get; }
         public DbSet<CheckStudent> CheckStudents { set; get; }
         public DbSet<FlowStudent> FlowStudents { set; get; }
+        public DbSet<Flow> Flows { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -30,6 +31,7 @@ namespace Attendance50.Data
             modelBuilder.Entity<FlowStudent>()
                 .HasKey(e => new { e.FlowId, e.StudentId });
         }
+
 
     }
 }
