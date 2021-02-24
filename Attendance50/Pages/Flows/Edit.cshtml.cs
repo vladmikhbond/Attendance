@@ -24,11 +24,11 @@ namespace Attendance50.Pages.Flows
         
 
         public string FilterValue;
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _db;
 
         public EditModel(ApplicationDbContext context)
         {
-            _context = context;
+            _db = context;
         }
 
         [BindProperty]
@@ -41,7 +41,7 @@ namespace Attendance50.Pages.Flows
                 return NotFound();
             }
 
-            Flow = await _context.Flows.Include(f => f.FlowStudents).FirstOrDefaultAsync(m => m.Id == id);
+            Flow = await _db.Flows.Include(f => f.FlowStudents).FirstOrDefaultAsync(m => m.Id == id);
 
             if (Flow == null)
             {
@@ -54,7 +54,7 @@ namespace Attendance50.Pages.Flows
                 .Select(fs => fs.StudentId).ToArray();
 
             AllStudents =
-                from s in _context.Students.Include(s => s.Group)
+                from s in _db.Students.Include(s => s.Group)
                 where s.Group.Name.StartsWith(FilterValue)
                 orderby s.Group.Name, s.Surname
                 select new StudInfo {
@@ -73,7 +73,7 @@ namespace Attendance50.Pages.Flows
             {
                 return Page();
             }
-            var flow = _context
+            var flow = _db
                 .Flows.Include(f => f.FlowStudents)
                 .SingleOrDefault(f => f.Id == Flow.Id);
             
@@ -88,7 +88,7 @@ namespace Attendance50.Pages.Flows
             
             try
             {
-                await _context.SaveChangesAsync();
+                await _db.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -107,7 +107,7 @@ namespace Attendance50.Pages.Flows
 
         private bool FlowExists(int id)
         {
-            return _context.Flows.Any(e => e.Id == id);
+            return _db.Flows.Any(e => e.Id == id);
         }
     }
 }

@@ -12,6 +12,7 @@ namespace Attendance50.Models
         public DateTime When { set; get; }
         //
         public List<CheckStudent> CheckStudents { set; get; }
+        public Flow Flow { set; get; }
     }
 
 }

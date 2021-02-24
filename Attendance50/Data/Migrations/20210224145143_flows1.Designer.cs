@@ -4,14 +4,16 @@ using Attendance50.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Attendance50.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210224145143_flows1")]
+    partial class flows1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,8 +35,6 @@ namespace Attendance50.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FlowId");
 
                     b.ToTable("Checks");
                 });
@@ -333,17 +333,6 @@ namespace Attendance50.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Attendance50.Models.Check", b =>
-                {
-                    b.HasOne("Attendance50.Models.Flow", "Flow")
-                        .WithMany("Checks")
-                        .HasForeignKey("FlowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Flow");
-                });
-
             modelBuilder.Entity("Attendance50.Models.CheckStudent", b =>
                 {
                     b.HasOne("Attendance50.Models.Check", "Check")
@@ -451,8 +440,6 @@ namespace Attendance50.Data.Migrations
 
             modelBuilder.Entity("Attendance50.Models.Flow", b =>
                 {
-                    b.Navigation("Checks");
-
                     b.Navigation("FlowStudents");
                 });
 

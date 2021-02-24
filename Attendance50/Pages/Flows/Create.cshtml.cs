@@ -18,14 +18,14 @@ namespace Attendance50.Pages.Flows
         public MultiSelectList StudentIds;
         public string FilterValue;
 
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _db;
 
         [BindProperty]
         public Flow Flow { get; set; }
 
         public CreateModel(ApplicationDbContext context)
         {
-            _context = context;
+            _db = context;
         }
 
         public IActionResult OnGet()
@@ -34,7 +34,7 @@ namespace Attendance50.Pages.Flows
 
             // get filtered students
             var students = 
-                from s in _context.Students.Include(s => s.Group)
+                from s in _db.Students.Include(s => s.Group)
                 where s.Group.Name.StartsWith(FilterValue)
                 orderby s.Group.Name, s.Surname
                 select new { s.Id, Info = $"{s.Group.Name} {s.Nick}" };
@@ -54,13 +54,13 @@ namespace Attendance50.Pages.Flows
             
             // add new flow
             Flow.UserName = User.Identity.Name;
-            _context.Flows.Add(Flow);
-            await _context.SaveChangesAsync();
+            _db.Flows.Add(Flow);
+            await _db.SaveChangesAsync();
 
             // add students to flow
             var flowStudents = studentIds.Select(id => new FlowStudent { FlowId = Flow.Id, StudentId = id });
-            _context.FlowStudents.AddRange(flowStudents);
-            await _context.SaveChangesAsync();
+            _db.FlowStudents.AddRange(flowStudents);
+            await _db.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }

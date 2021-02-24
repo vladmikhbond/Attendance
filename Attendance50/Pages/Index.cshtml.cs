@@ -77,7 +77,9 @@ namespace Attendance50.Pages
                     FlowId = flowId,
                     When = DateTime.Now,
                 };
+                
                 newCheck.CheckStudents = presentStudents.Select(s => new CheckStudent { StudentId = s.Id }).ToList();
+                _db.Checks.Add(newCheck);
 
                 _db.SaveChanges();
 

@@ -22,6 +22,13 @@ namespace Attendance50.Models
 
         [NotMapped]
         public bool IsPresent { set; get; }
+        [NotMapped]
+        public string ReverseName 
+        { 
+            get => $"{Surname} {Name}"; 
+        }
+        
+
     }
 
 }

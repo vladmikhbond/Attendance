@@ -12,18 +12,18 @@ namespace Attendance50.Pages.Flows
 {
     public class IndexModel : PageModel
     {
-        private readonly Attendance50.Data.ApplicationDbContext _context;
+        private readonly Attendance50.Data.ApplicationDbContext _db;
 
         public IndexModel(Attendance50.Data.ApplicationDbContext context)
         {
-            _context = context;
+            _db = context;
         }
 
         public IList<Flow> Flow { get;set; }
 
         public async Task OnGetAsync()
         {
-            Flow = await _context.Flows.ToListAsync();
+            Flow = await _db.Flows.ToListAsync();
         }
     }
 }

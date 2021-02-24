@@ -12,11 +12,11 @@ namespace Attendance50.Pages.Flows
 {
     public class DeleteModel : PageModel
     {
-        private readonly Attendance50.Data.ApplicationDbContext _context;
+        private readonly Attendance50.Data.ApplicationDbContext _db;
 
         public DeleteModel(Attendance50.Data.ApplicationDbContext context)
         {
-            _context = context;
+            _db = context;
         }
 
         [BindProperty]
@@ -29,7 +29,7 @@ namespace Attendance50.Pages.Flows
                 return NotFound();
             }
 
-            Flow = await _context.Flows.FirstOrDefaultAsync(m => m.Id == id);
+            Flow = await _db.Flows.FirstOrDefaultAsync(m => m.Id == id);
 
             if (Flow == null)
             {
@@ -45,12 +45,12 @@ namespace Attendance50.Pages.Flows
                 return NotFound();
             }
 
-            Flow = await _context.Flows.FindAsync(id);
+            Flow = await _db.Flows.FindAsync(id);
 
             if (Flow != null)
             {
-                _context.Flows.Remove(Flow);
-                await _context.SaveChangesAsync();
+                _db.Flows.Remove(Flow);
+                await _db.SaveChangesAsync();
             }
 
             return RedirectToPage("./Index");

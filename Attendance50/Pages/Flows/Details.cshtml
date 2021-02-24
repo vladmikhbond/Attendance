@@ -5,27 +5,68 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<div class="container">
+    <div class="row">
 
-<div>
-    <h4>Flow</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Flow.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Flow.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Flow.UserName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Flow.UserName)
-        </dd>
-    </dl>
+        <div class="col-8">
+            
+                <table border="1">
+                    <tr style="font-weight:800">
+                        <td>@Model.Flow.Name (total @Model.Students.Count())</td>
+
+                        @for (int i = 0; i < Model.Checks.Length; i++)
+                        {
+                            var check = Model.Checks[i];
+                            <td title="@check.When)" style="width:20px">@((i + 1) % 10)</td>
+                        }
+                    </tr>
+                    @foreach (var stud in Model.Students)
+                    {
+                    <tr>
+                        <td style="text-align:left;">@stud.ReverseName</td>
+
+                        @foreach (var check in Model.Checks)
+                        {
+                            string mark = check.CheckStudents.Any(cs => cs.StudentId == stud.Id) ? "" : "н";
+
+                            <td onclick="tooglePresenсе(@check.Id, @stud.Id, this)">@mark</td>
+                        }
+                    </tr>
+                    }
+
+                </table>
+            
+        </div>
+        <hr/>
+        Alt+click - to toogle mark
+    </div>
 </div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Flow.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
-</div>
+
+@section Scripts {
+    <script>
+        async function tooglePresenсе(checkId, studentId, source)
+        {
+            let willBePresent = source.innerHTML.trim() !== "";
+            if (event.altKey) {
+                const data = { CheckId: checkId, StudentId: studentId, willBePresent};
+                const url = '/Flows/Details?handler=Ajax';
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        RequestVerificationToken:
+                            $('input:hidden[name="__RequestVerificationToken"]').val()
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const json = await response.json();
+                if (typeof (json) == "string")
+                    console.log(json);
+                else 
+                    source.innerHTML = json.willBePresent ? "" : "н";
+            }
+        }
+    </script>
+}
