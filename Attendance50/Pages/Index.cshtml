@@ -6,24 +6,26 @@
 
 <div class="text-left">
 
+
     <form id="form1" asp-page="Index" method="post" enctype="multipart/form-data">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
+        <div>
+            <input asp-for="UploadedFile" accept="text/html" lang="en" />
+            @*<span asp-validation-for="UploadedFile" class="text-danger"></span>*@
+
+            <input type="submit" id="submitCheck" value="Check" style="visibility: hidden" />
+        </div>
+
 
         <div class="form-group">
             <div class="form-group">
                 <div>
-                    <select size="5" name="flowIds" class="form-control" asp-items="Model.FlowSelectList"></select>
+                    <select size="5" name="flowIds" id="flowIds" class="form-control" asp-items="Model.FlowSelectList"></select>
                     <span asp-validation-for="FlowSelectList" class="text-danger"></span>
                 </div>
             </div>
 
         </div>
-        <p>
-            <input asp-for="UploadedFile" accept="text/html" lang="en" />
-            <span asp-validation-for="UploadedFile" class="text-danger"></span>
-
-            <input type="submit" id="submitCheck" value="Check" style="visibility: hidden" />
-        </p>
     </form>
 
     <hr />
@@ -31,7 +33,7 @@
     {
 
         <form asp-page="Index" asp-page-handler="Save" method="post">
-            <input asp-for="MeetComment" placeholder="your comment if needed" style="width: 50%"/>
+            <input asp-for="MeetComment" placeholder="your comment if needed" style="width: 50%" />
             <input type="submit" value="Save" title="Сохранить в базе данных" />
         </form>
 
@@ -53,7 +55,7 @@
     }
     else
     {
-<h3>Инструкция</h3>
+        <h3>Инструкция</h3>
 <pre>
 На странице встречи (Google Meet) выбрать вкладку "Участники" (должны показаться имена участников).
 Сохранить встречу как "Webpage, Complete".
@@ -68,8 +70,10 @@
 
 @section Scripts {
     <script>
-        document.querySelector("#UploadedFile").addEventListener("change", function () {
+        const fileField = document.querySelector("#UploadedFile");
+
+        fileField.addEventListener("change", function () {
             document.querySelector("#submitCheck").click();
-        })
+        });
     </script>
 }

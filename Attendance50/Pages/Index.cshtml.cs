@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -49,25 +50,38 @@ namespace Attendance50.Pages
 
         }
 
-        
         public IActionResult OnPost(int[] flowIds)
         {
-            if (flowIds.Length == 0) {
-                ModelState.AddModelError("", "Select Flow");                   
-            }
-            if (ModelState.IsValid)
+            var presentsNicks = _process.GetPresentNames(UploadedFile);
+
+            int flowId = flowIds.Length > 0 ? flowIds[0] : 0;
+
+            // Flow is not selected. Define it by default.
+            if (flowId == 0)
             {
-                var flowId = flowIds[0];
+                flowId = (from s in _db.Students
+                        from fs in _db.FlowStudents
+                        from f in _db.Flows
+                        where f.Id == fs.FlowId
+                        where s.Id == fs.StudentId
+                        where f.UserName == User.Identity.Name
+                        where presentsNicks.Contains(s.Nick)
+                        group fs by fs.FlowId into g
+                        select new { FlowId = g.Key, Count = g.Count() } into p
+                        orderby p.Count
+                        select p.FlowId).LastOrDefault();
+            }
+
+            //if (ModelState.IsValid)
+            //{
                 var allStudents = (from s in _db.Students
                         from fs in _db.FlowStudents
                         where fs.FlowId == flowId
                         where s.Id == fs.StudentId
                         select s).ToArray();
-
-                var presentsNames = _process.GetPresentNames(UploadedFile);
-
+                
                 var presentStudents = allStudents
-                     .Where(s => presentsNames.Contains(s.Nick))
+                     .Where(s => presentsNicks.Contains(s.Nick))
                      .ToArray();
 
                 // Create new Check and save fo DB 
@@ -76,23 +90,18 @@ namespace Attendance50.Pages
                 {       
                     FlowId = flowId,
                     When = DateTime.Now,
-                };
-                
+                };                
                 newCheck.CheckStudents = presentStudents.Select(s => new CheckStudent { StudentId = s.Id }).ToList();
                 _db.Checks.Add(newCheck);
-
                 _db.SaveChanges();
 
                 // return to report
-                return Content(allStudents.Count().ToString());
-            }
+                return Redirect($"Flows/Details?id={flowId}");
 
-            var flows = _db.Flows.Where(f => f.UserName == User.Identity.Name);
-            FlowSelectList = new SelectList(flows, "Id", "Name");
-
-            return Page();
-
-
+            //}
+            //var flows = _db.Flows.Where(f => f.UserName == User.Identity.Name);
+            //FlowSelectList = new SelectList(flows, "Id", "Name");
+            //return Page();
         }
 
     }
