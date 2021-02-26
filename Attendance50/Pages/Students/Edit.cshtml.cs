@@ -13,11 +13,11 @@ namespace Attendance50.Pages.Students
 {
     public class EditModel : PageModel
     {
-        private readonly Attendance50.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _db;
 
-        public EditModel(Attendance50.Data.ApplicationDbContext context)
+        public EditModel(ApplicationDbContext db)
         {
-            _context = context;
+            _db = db;
         }
 
         [BindProperty]
@@ -30,7 +30,7 @@ namespace Attendance50.Pages.Students
                 return NotFound();
             }
 
-            Student = await _context.Students.FirstOrDefaultAsync(m => m.Id == id);
+            Student = await _db.Students.FirstOrDefaultAsync(m => m.Id == id);
 
             if (Student == null)
             {
@@ -48,11 +48,14 @@ namespace Attendance50.Pages.Students
                 return Page();
             }
 
-            _context.Attach(Student).State = EntityState.Modified;
-
+            var oldStudent = _db.Students.Find(Student.Id);
+            oldStudent.Name = Student.Name;
+            oldStudent.Surname = Student.Surname;
+            oldStudent.Nick = Student.Nick;
+            //_db.Attach(Student).State = EntityState.Modified;
             try
             {
-                await _context.SaveChangesAsync();
+                await _db.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -71,7 +74,7 @@ namespace Attendance50.Pages.Students
 
         private bool StudentExists(int id)
         {
-            return _context.Students.Any(e => e.Id == id);
+            return _db.Students.Any(e => e.Id == id);
         }
     }
 }

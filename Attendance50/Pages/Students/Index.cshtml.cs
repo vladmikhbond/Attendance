@@ -19,11 +19,14 @@ namespace Attendance50.Pages.Students
             _context = context;
         }
 
-        public IList<Student> Student { get;set; }
+        public IList<Student> Students { get;set; }
 
-        public async Task OnGetAsync()
+        public void OnGetAsync()
         {
-            Student = await _context.Students.ToListAsync();
+            Students = (from s in _context.Students.Include(s => s.Group)
+                       orderby s.Group.Name, s.Surname
+                       select s).ToList();
+                
         }
     }
 }

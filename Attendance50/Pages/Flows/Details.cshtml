@@ -17,7 +17,11 @@
                         @for (int i = 0; i < Model.Checks.Length; i++)
                         {
                             var check = Model.Checks[i];
-                            <td title="@check.When)" style="width:20px">@((i + 1) % 10)</td>
+                            int no = (i + 1) % 10;
+
+                            <td title="@check.When" style="width:20px">
+                                 <a href="deletecheck?id=@check.Id&flowId=@Model.Flow.Id">@no</a>
+                            </td>
                         }
                     </tr>
                     @foreach (var stud in Model.Students)
