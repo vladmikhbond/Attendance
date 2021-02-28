@@ -12,12 +12,15 @@ namespace Attendance50.Pages.Checks
 {
     public class DeleteCheckModel : PageModel
     {
-        private readonly Attendance50.Data.ApplicationDbContext _context;
+        private readonly Attendance50.Data.ApplicationDbContext _db;
 
         public DeleteCheckModel(Attendance50.Data.ApplicationDbContext context)
         {
-            _context = context;
+            _db = context;
         }
+        
+        [TempData]
+        public int FlowId { get; set; }
 
         [BindProperty]
         public Check Check { get; set; }
@@ -29,14 +32,14 @@ namespace Attendance50.Pages.Checks
                 return NotFound();
             }
 
-            Check = await _context.Checks
+            Check = await _db.Checks
                 .Include(c => c.Flow).FirstOrDefaultAsync(m => m.Id == id);
 
             if (Check == null)
             {
                 return NotFound();
             }
-            TempData["flowId"] = flowId;
+            FlowId = flowId;
             return Page();
         }
 
@@ -47,15 +50,14 @@ namespace Attendance50.Pages.Checks
                 return NotFound();
             }
 
-            Check = await _context.Checks.FindAsync(id);
+            Check = await _db.Checks.FindAsync(id);
 
             if (Check != null)
             {
-                _context.Checks.Remove(Check);
-                await _context.SaveChangesAsync();
+                _db.Checks.Remove(Check);
+                await _db.SaveChangesAsync();
             }
-            var flowId = Convert.ToInt32(TempData["flowId"]);
-            return RedirectToPage("/Flows/Details", new { id = flowId });
+            return RedirectToPage("/Flows/Details", new { id = FlowId });
         }
     }
 }

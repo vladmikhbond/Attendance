@@ -22,8 +22,6 @@ namespace Attendance50.Pages
     [Authorize]
     public class IndexModel : PageModel
     {
-
-
         private readonly ApplicationDbContext _db;
         private readonly Process _process;
 
@@ -72,36 +70,30 @@ namespace Attendance50.Pages
                         select p.FlowId).LastOrDefault();
             }
 
-            //if (ModelState.IsValid)
-            //{
-                var allStudents = (from s in _db.Students
-                        from fs in _db.FlowStudents
-                        where fs.FlowId == flowId
-                        where s.Id == fs.StudentId
-                        select s).ToArray();
+            var allStudents = (from s in _db.Students
+                    from fs in _db.FlowStudents
+                    where fs.FlowId == flowId
+                    where s.Id == fs.StudentId
+                    select s).ToArray();
                 
-                var presentStudents = allStudents
-                     .Where(s => presentsNicks.Contains(s.Nick))
-                     .ToArray();
+            var presentStudents = allStudents
+                    .Where(s => presentsNicks.Contains(s.Nick))
+                    .ToArray();
 
-                // Create new Check and save fo DB 
+            // Create new check and save fo DB 
 
-                var newCheck = new Check
-                {       
-                    FlowId = flowId,
-                    When = DateTime.Now,
-                };                
-                newCheck.CheckStudents = presentStudents.Select(s => new CheckStudent { StudentId = s.Id }).ToList();
-                _db.Checks.Add(newCheck);
-                _db.SaveChanges();
+            var newCheck = new Check
+            {
+                FlowId = flowId,
+                When = DateTime.Now,
+                Raw = string.Join('\t', presentsNicks)
+            };                
+            newCheck.CheckStudents = presentStudents.Select(s => new CheckStudent { StudentId = s.Id }).ToList();
+            _db.Checks.Add(newCheck);
+            _db.SaveChanges();
 
-                // return to report
-                return Redirect($"Flows/Details?id={flowId}");
-
-            //}
-            //var flows = _db.Flows.Where(f => f.UserName == User.Identity.Name);
-            //FlowSelectList = new SelectList(flows, "Id", "Name");
-            //return Page();
+            // return to report
+            return Redirect($"Flows/Details?id={flowId}");
         }
 
     }

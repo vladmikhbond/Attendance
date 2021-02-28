@@ -4,28 +4,36 @@
 @{
     ViewData["Title"] = "Details";
 }
-
+<h2>@Model.Flow.Name (total @Model.Students.Count())</h2>
 <div class="container">
     <div class="row">
 
         <div class="col-8">
-            
-                <table border="1">
-                    <tr style="font-weight:800">
-                        <td>@Model.Flow.Name (total @Model.Students.Count())</td>
 
-                        @for (int i = 0; i < Model.Checks.Length; i++)
-                        {
-                            var check = Model.Checks[i];
-                            int no = (i + 1) % 10;
-
-                            <td title="@check.When" style="width:20px">
-                                 <a href="deletecheck?id=@check.Id&flowId=@Model.Flow.Id">@no</a>
-                            </td>
-                        }
-                    </tr>
-                    @foreach (var stud in Model.Students)
+            <table border="1">
+                @*-------- Header ---------*@
+                <tr style="font-weight:800">
+                    <td>Name</td>
+                    @{int i = 1; }
+                    @foreach (var check in Model.Checks)
                     {
+                        <td title="@check.When" style="width:20px">@(i++)</td>
+                    }
+                </tr>
+                <tr>
+                    <td> </td>
+                    @foreach (var check in Model.Checks)
+                    {
+                        <td>
+                            <a href="deletecheck?id=@check.Id&flowId=@Model.Flow.Id">@check.CheckStudents.Count()</a>
+                        </td>
+
+                    }
+                </tr>
+
+                @*-------- Body ---------*@
+                @foreach (var stud in Model.Students)
+                {
                     <tr>
                         <td style="text-align:left;">@stud.ReverseName</td>
 
@@ -36,13 +44,11 @@
                             <td onclick="tooglePresenсе(@check.Id, @stud.Id, this)">@mark</td>
                         }
                     </tr>
-                    }
+                }
 
-                </table>
-            
-        </div>
-        <hr/>
-        Alt+click - to toogle mark
+            </table>
+            Alt+click - to toogle mark
+        </div>       
     </div>
 </div>
 
