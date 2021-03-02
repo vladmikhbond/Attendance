@@ -6,16 +6,14 @@
 
 <div class="text-left">
 
-
     <form id="form1" asp-page="Index" method="post" enctype="multipart/form-data">
-        @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div>
             <input asp-for="UploadedFile" accept="text/html" lang="en" />
-            @*<span asp-validation-for="UploadedFile" class="text-danger"></span>*@
+            <span asp-validation-for="UploadedFile" class="text-danger"></span>
 
             <input type="submit" id="submitCheck" value="Check" style="visibility: hidden" />
         </div>
-
 
         <div class="form-group">
             <div class="form-group">
@@ -58,7 +56,7 @@
         <h3>Инструкция</h3>
 <pre>
 На странице встречи (Google Meet) выбрать вкладку "Участники" (должны показаться имена участников).
-Сохранить встречу как "Webpage, HTML Only".
+Сохранить встречу как "Webpage, Complete".
 Сохраненный html-файл загрузить перетаскиванием или кнопкой "Choose File".
 
 Перед выбором файла в списке потоков можно выбрать поток, для которого проводится проверка.

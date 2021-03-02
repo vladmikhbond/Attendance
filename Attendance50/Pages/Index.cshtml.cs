@@ -25,7 +25,6 @@ namespace Attendance50.Pages
         private readonly ApplicationDbContext _db;
         private readonly Process _process;
 
-        [Required]
         public IFormFile UploadedFile { set; get; }      
         [BindProperty]
         public string MeetComment { set; get; }     
@@ -45,18 +44,33 @@ namespace Attendance50.Pages
         {
             var flows = _db.Flows.Where(f => f.UserName == User.Identity.Name);
             FlowSelectList = new SelectList(flows, "Id", "Name");
-
         }
 
         public IActionResult OnPost(int[] flowIds)
         {
-            var presentsNicks = _process.GetPresentNames(UploadedFile);
+            // ------ Inner func
+            IActionResult Error(string message)
+            {
+                ModelState.AddModelError("UploadedFile", message);
+                var flows = _db.Flows.Where(f => f.UserName == User.Identity.Name);
+                FlowSelectList = new SelectList(flows, "Id", "Name");
+                return Page();
+            }
+            // ------
 
+            var presentsNicks = _process.GetPresentNames(UploadedFile);
+            if (presentsNicks.Length == 0)
+            {
+                return Error("No students found");
+            }
+
+            // Define flow id
             int flowId = flowIds.Length > 0 ? flowIds[0] : 0;
 
-            // Flow is not selected. Define it by default.
+            
             if (flowId == 0)
             {
+                // Flow is not selected. Define it by default
                 flowId = (from s in _db.Students
                         from fs in _db.FlowStudents
                         from f in _db.Flows
@@ -69,6 +83,10 @@ namespace Attendance50.Pages
                         orderby p.Count
                         select p.FlowId).LastOrDefault();
             }
+            if (flowId == 0)
+            {
+                return Error("Can not define a flow.");
+            } 
 
             var allStudents = (from s in _db.Students
                     from fs in _db.FlowStudents
@@ -87,7 +105,9 @@ namespace Attendance50.Pages
                 FlowId = flowId,
                 When = DateTime.Now,
                 Raw = string.Join('\t', presentsNicks)
-            };                
+            }; 
+            
+
             newCheck.CheckStudents = presentStudents.Select(s => new CheckStudent { StudentId = s.Id }).ToList();
             _db.Checks.Add(newCheck);
             _db.SaveChanges();
