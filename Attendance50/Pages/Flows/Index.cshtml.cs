@@ -23,7 +23,9 @@ namespace Attendance50.Pages.Flows
 
         public async Task OnGetAsync()
         {
-            Flow = await _db.Flows.ToListAsync();
+            Flow = await _db.Flows
+                .Where(f => f.UserName == User.Identity.Name)
+                .ToListAsync();
         }
     }
 }

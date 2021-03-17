@@ -25,14 +25,17 @@ namespace Attendance50.Pages
         private readonly ApplicationDbContext _db;
         private readonly Process _process;
 
-        public IFormFile UploadedFile { set; get; }      
+        public IFormFile UploadedFile { set; get; } 
+        
         [BindProperty]
         public string MeetComment { set; get; }     
 
         [BindNever]
         public IEnumerable<IGrouping<string, Student>> GroupedStudents { set; get; }
+
         [BindNever]
-        public SelectList FlowSelectList { set; get; }
+        public IEnumerable<Flow> Flows { set; get; } 
+            
 
         public IndexModel(ApplicationDbContext db, Process process)
         {
@@ -42,31 +45,27 @@ namespace Attendance50.Pages
 
         public void OnGet()
         {
-            var flows = _db.Flows.Where(f => f.UserName == User.Identity.Name);
-            FlowSelectList = new SelectList(flows, "Id", "Name");
+            Flows = _db.Flows.Where(f => f.UserName == User.Identity.Name);
         }
 
         public IActionResult OnPost(int[] flowIds)
         {
-            // ------ Inner func
-            IActionResult Error(string message)
+            IActionResult ErrorInnerFunc(string message)
             {
                 ModelState.AddModelError("UploadedFile", message);
-                var flows = _db.Flows.Where(f => f.UserName == User.Identity.Name);
-                FlowSelectList = new SelectList(flows, "Id", "Name");
+                Flows = _db.Flows.Where(f => f.UserName == User.Identity.Name);
                 return Page();
             }
-            // ------
+
 
             var presentsNicks = _process.GetPresentNames(UploadedFile);
             if (presentsNicks.Length == 0)
             {
-                return Error("No students found");
+                return ErrorInnerFunc("No students found");
             }
 
             // Define flow id
-            int flowId = flowIds.Length > 0 ? flowIds[0] : 0;
-
+            int flowId = flowIds.FirstOrDefault();
             
             if (flowId == 0)
             {
@@ -85,7 +84,7 @@ namespace Attendance50.Pages
             }
             if (flowId == 0)
             {
-                return Error("Can not define a flow.");
+                return ErrorInnerFunc("Can not define a flow.");
             } 
 
             var allStudents = (from s in _db.Students
