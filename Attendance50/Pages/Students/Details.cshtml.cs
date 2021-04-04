@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Attendance50.Data;
 using Attendance50.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Attendance50.Pages.Students
 {
+    [Authorize]
     public class DetailsModel : PageModel
     {
         private readonly Attendance50.Data.ApplicationDbContext _context;

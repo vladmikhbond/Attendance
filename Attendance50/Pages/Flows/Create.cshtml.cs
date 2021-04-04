@@ -9,9 +9,11 @@ using Attendance50.Data;
 using Attendance50.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Attendance50.Pages.Flows
 {
+    [Authorize]
     public class CreateModel : PageModel
     {       
         public const string GROUPS_FILTER_NAME = "Groups";

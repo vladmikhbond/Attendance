@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Attendance50.Data;
 using Attendance50.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Attendance50.Pages.Flows
 {
+    [Authorize]
     public class DeleteModel : PageModel
     {
         private readonly Attendance50.Data.ApplicationDbContext _db;

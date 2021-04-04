@@ -1,0 +1,55 @@
+﻿@page
+@model Attendance50.Pages.Flows.ShowModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+<h2>@Model.Flow.Name (total @Model.Students.Count())</h2>
+<div class="container">
+    <div class="row">
+
+        <div class="col-8">
+
+            <table border="1">
+                @*-------- Header ---------*@
+                <tr style="font-weight:800">
+                    <td>Name</td>
+                    @{int i = 1; }
+                    @foreach (var check in Model.Checks)
+                    {
+                        <td title="@check.When" style="width:20px">@(i++)</td>
+                    }
+                </tr>
+                <tr>
+                    <td> </td>
+                    @foreach (var check in Model.Checks)
+                    {
+                        <td>
+                            @check.CheckStudents.Count()
+                        </td>
+
+                    }
+                </tr>
+
+                @*-------- Body ---------*@
+                @foreach (var stud in Model.Students)
+                {
+                    <tr>
+                        <td style="text-align:left;">@stud.ReverseName</td>
+
+                        @foreach (var check in Model.Checks)
+                        {
+                            string mark = check.CheckStudents.Any(cs => cs.StudentId == stud.Id) ? "" : "н";
+
+                            <td onclick="tooglePresenсе(@check.Id, @stud.Id, this)">@mark</td>
+                        }
+                    </tr>
+                }
+
+            </table>
+            Alt+click - to toogle mark
+        </div>       
+    </div>
+</div>
+
+

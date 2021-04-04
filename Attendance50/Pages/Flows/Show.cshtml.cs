@@ -8,12 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Attendance50.Data;
 using Attendance50.Models;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Attendance50.Pages.Flows
 {
-    [Authorize]
-    public class DetailsModel : PageModel
+    public class ShowModel : PageModel
     {
         public class ChangeMark
         {
@@ -24,7 +22,7 @@ namespace Attendance50.Pages.Flows
 
         private readonly ApplicationDbContext _db;
 
-        public DetailsModel(ApplicationDbContext context)
+        public ShowModel(ApplicationDbContext context)
         {
             _db = context;
         }
@@ -35,10 +33,8 @@ namespace Attendance50.Pages.Flows
        
 
         public async Task<IActionResult> OnGetAsync(int id)
-        {
-             string u = User.Identity.Name;
-             Flow = await _db.Flows
-                .Where(f => u == f.UserName || u == "opr")  // Easter egg
+        {            
+             Flow = await _db.Flows                
                 .SingleOrDefaultAsync(m => m.Id == id);
 
             Students = (from s in _db.Students
@@ -53,28 +49,6 @@ namespace Attendance50.Pages.Flows
                       orderby c.When
                       select c).Include(c => c.CheckStudents).ToArray();               
             return Page();
-        }
-
-        public JsonResult OnPostAjax( [FromBody] ChangeMark changeMark)
-        {
-            try {
-                var checkStudent = new CheckStudent { CheckId = changeMark.CheckId, StudentId = changeMark.StudentId };
-
-                if (changeMark.WillBePresent)
-                {
-                    _db.CheckStudents.Add(checkStudent);
-                }
-                else
-                {
-                    _db.CheckStudents.Remove(checkStudent);
-                }
-                _db.SaveChanges();
-                return new JsonResult(changeMark);
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(ex.Message);
-            }
         }
 
     }

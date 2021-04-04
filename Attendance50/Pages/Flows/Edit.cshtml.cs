@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Attendance50.Data;
 using Attendance50.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Attendance50.Pages.Flows
 {
+    [Authorize]
     public class EditModel : PageModel
     {
         public class StudInfo
