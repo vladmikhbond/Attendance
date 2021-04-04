@@ -8,19 +8,19 @@ using Microsoft.EntityFrameworkCore;
 using Attendance50.Data;
 using Attendance50.Models;
 
-namespace Attendance50.Pages.Flows
+namespace Attendance50.Pages.Checks
 {
     public class DeleteModel : PageModel
     {
-        private readonly Attendance50.Data.ApplicationDbContext _db;
+        private readonly Attendance50.Data.ApplicationDbContext _context;
 
         public DeleteModel(Attendance50.Data.ApplicationDbContext context)
         {
-            _db = context;
+            _context = context;
         }
 
         [BindProperty]
-        public Flow Flow { get; set; }
+        public Check Check { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -29,11 +29,10 @@ namespace Attendance50.Pages.Flows
                 return NotFound();
             }
 
-            Flow = await _db.Flows
-                .Where(f => f.UserName == User.Identity.Name)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            Check = await _context.Checks
+                .Include(c => c.Flow).FirstOrDefaultAsync(m => m.Id == id);
 
-            if (Flow == null)
+            if (Check == null)
             {
                 return NotFound();
             }
@@ -47,12 +46,12 @@ namespace Attendance50.Pages.Flows
                 return NotFound();
             }
 
-            Flow = await _db.Flows.FindAsync(id);
+            Check = await _context.Checks.FindAsync(id);
 
-            if (Flow != null)
+            if (Check != null)
             {
-                _db.Flows.Remove(Flow);
-                await _db.SaveChangesAsync();
+                _context.Checks.Remove(Check);
+                await _context.SaveChangesAsync();
             }
 
             return RedirectToPage("./Index");

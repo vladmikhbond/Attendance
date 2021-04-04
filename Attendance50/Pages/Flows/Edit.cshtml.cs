@@ -41,7 +41,9 @@ namespace Attendance50.Pages.Flows
                 return NotFound();
             }
 
-            Flow = await _db.Flows.Include(f => f.FlowStudents).FirstOrDefaultAsync(m => m.Id == id);
+            Flow = await _db.Flows.Include(f => f.FlowStudents)
+                .Where(f => f.UserName == User.Identity.Name)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (Flow == null)
             {

@@ -8,25 +8,23 @@ using Microsoft.EntityFrameworkCore;
 using Attendance50.Data;
 using Attendance50.Models;
 
-namespace Attendance50.Pages.Flows
+namespace Attendance50.Pages.Checks
 {
     public class IndexModel : PageModel
     {
-        private readonly ApplicationDbContext _db;
+        private readonly Attendance50.Data.ApplicationDbContext _context;
 
-        public IndexModel(ApplicationDbContext context)
+        public IndexModel(Attendance50.Data.ApplicationDbContext context)
         {
-            _db = context;
+            _context = context;
         }
 
-        public IList<Flow> Flow { get;set; }
+        public IList<Check> Check { get;set; }
 
         public async Task OnGetAsync()
         {
-            string u = User.Identity.Name;
-            Flow = await _db.Flows
-                .Where(f => u == f.UserName || u == "opr")  // Easter egg
-                .ToListAsync();
+            Check = await _context.Checks
+                .Include(c => c.Flow).ToListAsync();
         }
     }
 }

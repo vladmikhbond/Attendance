@@ -20,9 +20,9 @@ namespace Attendance50.Pages.Flows
             public bool WillBePresent { set; get; }
         }
 
-        private readonly Attendance50.Data.ApplicationDbContext _db;
+        private readonly ApplicationDbContext _db;
 
-        public DetailsModel(Attendance50.Data.ApplicationDbContext context)
+        public DetailsModel(ApplicationDbContext context)
         {
             _db = context;
         }
@@ -32,10 +32,11 @@ namespace Attendance50.Pages.Flows
         public Student[] Students { set; get; }
        
 
-
         public async Task<IActionResult> OnGetAsync(int id)
         {
+             string u = User.Identity.Name;
              Flow = await _db.Flows
+                .Where(f => u == f.UserName || u == "opr")  // Easter egg
                 .SingleOrDefaultAsync(m => m.Id == id);
 
             Students = (from s in _db.Students
